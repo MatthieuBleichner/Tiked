@@ -14,7 +14,7 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
   '&:hover, &.Mui-focusVisible': {
     zIndex: 1,
     '& .MuiImageBackdrop-root': {
-      opacity: 0.35
+      opacity: 0.15
     },
     '& .MuiImageMarked-root': {
       opacity: 0
@@ -54,7 +54,7 @@ const ImageBackdrop = styled('span')(({ theme }) => ({
   top: 0,
   bottom: 0,
   backgroundColor: theme.palette.common.black,
-  opacity: 0.45,
+  opacity: 0.4,
   transition: theme.transitions.create('opacity')
 }));
 
@@ -69,19 +69,23 @@ const ImageMarked = styled('span')(({ theme }) => ({
 }));
 
 interface CardProps {
+  id: string;
   url: string;
   title: string;
   width?: number;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
-function Card({ title, url, width }: CardProps): JSX.Element {
+function Card({ id, title, url, width, onClick }: CardProps): JSX.Element {
   return (
     <ImageButton
       focusRipple
       key={title}
+      id={id}
       style={{
         width: width || 200
-      }}>
+      }}
+      onClick={onClick}>
       <ImageSrc style={{ backgroundImage: `url(${url})` }} />
       <ImageBackdrop className="MuiImageBackdrop-root" />
       <Image>
