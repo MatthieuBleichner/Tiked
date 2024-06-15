@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Card from '../../components/Card';
-import CityModal from '../../components/CityModal';
-import { ICity } from '../../types/types';
+import Card from 'components/Card';
+import CityModal from 'components/CityModal';
+import { ICity } from 'types/types';
 
 const cities: ICity[] = [
   {

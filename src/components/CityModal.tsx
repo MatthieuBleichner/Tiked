@@ -11,7 +11,7 @@ import TextField from '@mui/material//TextField';
 import { grey } from '@mui/material//colors';
 import { createStyles, makeStyles } from '@mui/styles';
 import { useTheme } from '@mui/material/styles';
-import { ICity } from '../types/types';
+import { ICity } from 'types/types';
 
 const useStyles = makeStyles(() =>
   createStyles({
