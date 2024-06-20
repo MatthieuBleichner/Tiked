@@ -3,3 +3,11 @@ export interface ICity {
   url: string;
   title: string;
 }
+
+export interface IMarket {
+  id: string;
+  title: string;
+  city: ICity;
+  dates: string;
+  color: string;
+}

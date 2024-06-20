@@ -1,4 +1,4 @@
-import Cities from './pages/Cities/Cities';
+import Dashboard from './pages/Dashboard/Dashboard';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TopMenu from 'components/TopMenu';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -17,7 +17,7 @@ function App(): JSX.Element {
       <TopMenu />
       <Router>
         <Routes>
-          <Route path="/" element={<Cities />} />
+          <Route path="/" element={<Dashboard />} />
         </Routes>
       </Router>
     </ThemeProvider>

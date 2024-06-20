@@ -13,13 +13,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { grey } from '@mui/material/colors';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: '#eeeeee',
+  backgroundColor: grey[200],
   '&:hover': {
-    backgroundColor: '#e0e0e0'
+    backgroundColor: grey[300]
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -137,7 +138,7 @@ export default function TopMenu() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="relative">
         <Toolbar>
           <IconButton
             size="large"
