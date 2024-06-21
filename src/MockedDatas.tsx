@@ -41,5 +41,30 @@ export const MockedMarkets: Record<string, IMarket[]> = {
       dates: 'S/D',
       color: '#1de9b6'
     }
+  ],
+  Quiberon: [
+    {
+      id: 'MarcheDuVarquez',
+      title: 'Marché du Varquez',
+      city: MockedCities[1],
+      dates: 'S/D',
+      color: '#651fff'
+    },
+    {
+      id: 'MarchéPortHaliguen',
+      title: 'Marché de Port Haliguen',
+      city: MockedCities[1],
+      dates: 'D',
+      color: '#ef5350'
+    }
+  ],
+  Pontivy: [
+    {
+      id: 'MarcheDeNoel',
+      title: 'Marché de Noel',
+      city: MockedCities[2],
+      dates: 'J/V/S/D',
+      color: '#64b5f6'
+    }
   ]
 };
