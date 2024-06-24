@@ -67,14 +67,52 @@ function Dashboard(): JSX.Element {
             ))}
           </Select>
         </FormControl>
-        {markets[currentCity].map(market => (
-          <MarketCard
-            key={market.id}
-            market={market}
-            isFocused={focusedMarketId === market.id}
-            onClick={onMarketClick}
-          />
-        ))}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection: 'column' }}>
+          {markets[currentCity].map(market => (
+            <MarketCard
+              key={market.id}
+              market={market}
+              isFocused={focusedMarketId === market.id}
+              onClick={onMarketClick}
+            />
+          ))}
+        </Box>
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, paddingTop: 5 }}>
+          <FormControl sx={{ width: '35%', paddingLeft: 2 }}>
+            <InputLabel
+              id="market-select-label"
+              sx={{
+                paddingLeft: 2,
+                color: '#2e2e2e',
+                '&.Mui-focused': {
+                  color: '#000'
+                }
+              }}>
+              Marché
+            </InputLabel>
+            <Select
+              labelId="market-select-label"
+              id="market-select"
+              value={currentMarket.title}
+              label="Age"
+              onChange={handleChange}
+              sx={{
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'darkgray'
+                },
+                '& .MuiInputLabel-outlined': {
+                  color: '#2e2e2e',
+                  fontWeight: 'red'
+                }
+              }}>
+              {markets[currentCity].map(market => (
+                <MenuItem key={market.id} value={market.title}>
+                  {market.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       <Box
         sx={{
