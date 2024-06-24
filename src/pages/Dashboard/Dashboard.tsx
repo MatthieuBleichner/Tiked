@@ -63,7 +63,8 @@ function Dashboard(): JSX.Element {
               '& .MuiInputLabel-outlined': {
                 color: '#2e2e2e',
                 fontWeight: 'red'
-              }
+              },
+              minWidth: 120
             }}>
             {MockedCities.map(city => (
               <MenuItem key={city.id} value={city.title}>
@@ -108,10 +109,11 @@ function Dashboard(): JSX.Element {
                 '& .MuiInputLabel-outlined': {
                   color: '#2e2e2e',
                   fontWeight: 'red'
-                }
+                },
+                minWidth: 120
               }}>
               {markets[currentCity].map(market => (
-                <MenuItem key={market.id} value={market.id}>
+                <MenuItem key={market.id} value={market.id} sx={{ textAlign: 'center' }}>
                   {market.title}
                 </MenuItem>
               ))}
