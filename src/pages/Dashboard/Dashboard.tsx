@@ -8,6 +8,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { IMarket } from 'types/types';
 
 function Dashboard(): JSX.Element {
   // const currentCity = MockedCities[0].title;
@@ -20,7 +21,7 @@ function Dashboard(): JSX.Element {
     setfocusedMarketId(event.currentTarget.id);
   };
 
-  const currentMarket = useMemo(() => {
+  const currentMarket: IMarket = useMemo(() => {
     return (
       markets[currentCity].find(market => market.id === focusedMarketId) || markets[currentCity][0]
     );
@@ -28,6 +29,10 @@ function Dashboard(): JSX.Element {
 
   const handleChange = (event: SelectChangeEvent) => {
     setCurrentCity(event.target.value as string);
+  };
+
+  const handleMarketChange = (event: SelectChangeEvent) => {
+    setfocusedMarketId(event.target.value as string);
   };
 
   return (
@@ -93,9 +98,9 @@ function Dashboard(): JSX.Element {
             <Select
               labelId="market-select-label"
               id="market-select"
-              value={currentMarket.title}
+              value={currentMarket.id}
               label="Age"
-              onChange={handleChange}
+              onChange={handleMarketChange}
               sx={{
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'darkgray'
@@ -106,7 +111,7 @@ function Dashboard(): JSX.Element {
                 }
               }}>
               {markets[currentCity].map(market => (
-                <MenuItem key={market.id} value={market.title}>
+                <MenuItem key={market.id} value={market.id}>
                   {market.title}
                 </MenuItem>
               ))}
