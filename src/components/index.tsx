@@ -1,3 +1,4 @@
 export { default as MarketCard } from './MarketCard/MarketCard';
-export { default as CitiesAndMarketsVerticalPanel } from './CitiesAndMarketsPanel/CitiesAndMarketsVerticalPanel';
 export { default as CitiesAndMarketsHorizontalPanel } from './CitiesAndMarketsPanel/CitiesAndMarketsHorizontalPanel';
+export { default as VerticalDrawer } from './Drawer/VerticalDrawer';
+export { default as TopMenu } from './TopMenu';

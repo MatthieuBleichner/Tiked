@@ -50,8 +50,7 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         borderRadius: 5,
-        zIndex: 10,
-        margin: 1
+        zIndex: 10
       }}>
       <FormControl>
         <InputLabel
