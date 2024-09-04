@@ -41,12 +41,17 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
   return (
     <Box
       sx={{
-        bgcolor: grey[200],
+        bgcolor: grey[50],
         width: '100%',
         paddingTop: 2,
         paddingBottom: 2,
+        paddingLeft: 5,
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        borderRadius: 5,
+        zIndex: 10,
+        margin: 1
       }}>
       <FormControl>
         <InputLabel
@@ -86,6 +91,7 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
         <InputLabel
           id="market-select-label"
           sx={{
+            paddingLeft: 2,
             color: '#2e2e2e',
             '&.Mui-focused': {
               color: '#000'

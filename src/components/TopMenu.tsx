@@ -138,7 +138,7 @@ export default function TopMenu() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="relative">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
