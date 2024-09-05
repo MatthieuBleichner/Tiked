@@ -77,7 +77,7 @@ export default function Dashboard() {
   const isMobile = useMediaQuery(`(max-width: 760px)`);
   const open = !isMobile;
   return (
-    <Box sx={{ display: 'flex', bgcolor: grey[200], flex: 1, width: '100%', height: '100vh' }}>
+    <Box sx={{ display: 'flex', bgcolor: grey[200], width: '100%', height: '100vh' }}>
       <BrowserRouter>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -116,21 +116,24 @@ export default function Dashboard() {
             </Box>
           </Toolbar>
         </AppBar>
-        <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
           <VerticalDrawer />
           <Box
             sx={{
-              flexGrow: 1,
+              // flexGrow: 1,
               padding: 2,
-              flexDirection: 'column'
+              flexDirection: 'column',
+              // width: '100%',
+              height: '100%',
+              displayMode: 'flex',
+              flex: 1
             }}>
             <DrawerHeader />
             <AppBar />
             <Box
               sx={{
-                display: 'flex',
-                flex: 1,
-                height: '10%'
+                height: '10%',
+                width: '100%'
               }}>
               <CitiesAndMarketsHorizontalPanel
                 cities={MockedCities}
