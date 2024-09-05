@@ -54,7 +54,7 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
         zIndex: 10,
         height: '100%'
       }}>
-      <FormControl size="small" >
+      <FormControl size="small">
         <InputLabel
           id="ville-select-label"
           sx={{
@@ -79,7 +79,7 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
               color: '#2e2e2e',
               fontWeight: 'red'
             },
-            minWidth: 120,
+            minWidth: 120
           }}>
           {cities.map(city => (
             <MenuItem key={city.id} value={city.title}>
