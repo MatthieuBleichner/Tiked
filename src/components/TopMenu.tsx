@@ -129,9 +129,15 @@ export default function TopMenu() {
               display: 'flex',
               flex: 1,
               width: '100%',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%'
             }}>
-            <Typography variant="h6" noWrap component="div">
+            <Typography
+              variant="h4"
+              noWrap
+              component="div"
+              sx={{ color: '#263dad', fontWeight: 600 }}>
               TIKED
             </Typography>
           </Box>

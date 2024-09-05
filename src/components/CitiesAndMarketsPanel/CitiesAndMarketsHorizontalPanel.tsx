@@ -48,11 +48,12 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
         paddingLeft: 2,
         // margin: 5,
         display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
+        justifyContent: { xs: 'center', md: 'flex-start' },
+        alignItems: { xs: 'flex-start', md: 'center' },
         borderRadius: 5,
         zIndex: 10,
-        height: '100%'
+        height: '100%',
+        flexDirection: { xs: 'column', md: 'row' }
       }}>
       <FormControl size="small">
         <InputLabel
@@ -88,41 +89,48 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{ paddingLeft: 1, maxWidth: { xs: '200px', md: '550px' } }} size="small">
-        <InputLabel
-          id="market-select-label"
-          sx={{
-            paddingLeft: 2,
-            color: '#2e2e2e',
-            '&.Mui-focused': {
-              color: '#000'
-            }
-          }}>
-          Marché
-        </InputLabel>
-        <Select
-          labelId="market-select-label"
-          id="market-select"
-          value={focusedMarketId}
-          label="Age"
-          onChange={handleMarketChange}
-          sx={{
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'darkgray'
-            },
-            '& .MuiInputLabel-outlined': {
+      <Box
+        sx={{
+          paddingLeft: { xs: 0, md: 2 },
+          paddingTop: { xs: 2, md: 0 },
+          maxWidth: { xs: '200px', md: '550px' }
+        }}>
+        <FormControl size="small">
+          <InputLabel
+            id="market-select-label"
+            sx={{
+              //paddingLeft: 2,
               color: '#2e2e2e',
-              fontWeight: 'red'
-            },
-            minWidth: 120
-          }}>
-          {markets[currentCity].map(market => (
-            <MenuItem key={market.id} value={market.id} sx={{ textAlign: 'center' }}>
-              {market.title}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+              '&.Mui-focused': {
+                color: '#000'
+              }
+            }}>
+            Marché
+          </InputLabel>
+          <Select
+            labelId="market-select-label"
+            id="market-select"
+            value={focusedMarketId}
+            label="Age"
+            onChange={handleMarketChange}
+            sx={{
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'darkgray'
+              },
+              '& .MuiInputLabel-outlined': {
+                color: '#2e2e2e',
+                fontWeight: 'red'
+              },
+              minWidth: 120
+            }}>
+            {markets[currentCity].map(market => (
+              <MenuItem key={market.id} value={market.id} sx={{ textAlign: 'center' }}>
+                {market.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
     </Box>
   );
 }
