@@ -6,47 +6,63 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { ICity, IMarket } from 'types/types';
+import { useQuery } from '@tanstack/react-query';
 
-interface CitiesAndMarketsHorizontalPanelProps {
-  cities: ICity[];
-  markets: Record<string, IMarket[]>;
-  setCurrentMarket: (arg0: IMarket) => void;
-}
+const API_URL = 'https://tiked-back.vercel.app/api/';
 
-function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelProps): JSX.Element {
-  const { cities, markets, setCurrentMarket } = props;
-  const [currentCity, setCurrentCity] = useState(cities[0].title);
-  const [focusedMarketId, setfocusedMarketId] = useState<string>(markets[currentCity][0].id);
+const fetchMarkets: (arg0: string | undefined) => Promise<Response> = async cityId => {
+  return fetch(`${API_URL}markets?cityId=${cityId}`);
+};
+
+const fetchCities: () => Promise<Response> = () => {
+  return fetch(`${API_URL}cities`);
+};
+
+function CitiesAndMarketsHorizontalPanel(): JSX.Element {
+  const { data: cities } = useQuery<ICity[]>({
+    queryKey: ['repoData'],
+    queryFn: () => fetchCities().then(res => res.json())
+  });
+
+  const [currentCity, setCurrentCity] = useState<ICity>();
+  useEffect(() => {
+    if (cities?.length) {
+      setCurrentCity(cities[0]);
+    }
+  }, [cities]);
+
+  const { data: markets } = useQuery<IMarket[]>({
+    queryKey: ['repoMarkets', currentCity?.id],
+    queryFn: () => fetchMarkets(currentCity?.id).then(res => res.json()),
+    enabled: !!currentCity?.id
+  });
+
+  const [currentMarket, setCurrentMarket] = useState<ICity>();
+  useEffect(() => {
+    if (markets?.length) {
+      setCurrentMarket(markets[0]);
+    }
+  }, [markets]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setCurrentCity(event.target.value as string);
+    const targetedcity = cities?.find(city => city.id === event.target.value);
+    if (targetedcity) {
+      setCurrentCity(targetedcity);
+    }
   };
 
   const handleMarketChange = (event: SelectChangeEvent) => {
-    const currentMarket = markets[currentCity].find(market => market.id === event?.target.value);
+    const currentMarket = markets?.find(market => market.id === event?.target.value);
     if (currentMarket) {
       setCurrentMarket(currentMarket);
-      setfocusedMarketId(currentMarket.id);
     }
   };
-
-  useEffect(() => {
-    const currentMarket = markets[currentCity][0];
-    if (currentMarket) {
-      setfocusedMarketId(currentMarket.id);
-      setCurrentMarket(currentMarket);
-    }
-  }, [currentCity]);
 
   return (
     <Box
       sx={{
         bgcolor: grey[50],
-        //width: '100%',
-        //paddingTop: 2,
-        //paddingBottom: 2,
         paddingLeft: 2,
-        // margin: 5,
         display: 'flex',
         justifyContent: { xs: 'center', md: 'flex-start' },
         alignItems: { xs: 'flex-start', md: 'center' },
@@ -69,7 +85,7 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
         <Select
           labelId="ville-select-label"
           id="ville-select"
-          value={currentCity}
+          value={currentCity?.id || ''}
           label="Age"
           onChange={handleChange}
           sx={{
@@ -82,11 +98,12 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
             },
             minWidth: 120
           }}>
-          {cities.map(city => (
-            <MenuItem key={city.id} value={city.title}>
-              {city.title}
-            </MenuItem>
-          ))}
+          {cities !== undefined &&
+            cities?.map(city => (
+              <MenuItem key={city.id} value={city.id}>
+                {city.name}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
       <Box
@@ -110,7 +127,7 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
           <Select
             labelId="market-select-label"
             id="market-select"
-            value={focusedMarketId}
+            value={currentMarket?.id || ''}
             label="Age"
             onChange={handleMarketChange}
             sx={{
@@ -123,9 +140,9 @@ function CitiesAndMarketsHorizontalPanel(props: CitiesAndMarketsHorizontalPanelP
               },
               minWidth: 120
             }}>
-            {markets[currentCity].map(market => (
+            {markets?.map(market => (
               <MenuItem key={market.id} value={market.id} sx={{ textAlign: 'center' }}>
-                {market.title}
+                {market.name}
               </MenuItem>
             ))}
           </Select>

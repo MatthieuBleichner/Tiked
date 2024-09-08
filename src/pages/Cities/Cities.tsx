@@ -8,25 +8,25 @@ import { ICity } from 'types/types';
 const cities: ICity[] = [
   {
     id: 'Lorient',
-    url: 'https://lekiosque.bzh/wp-content/uploads/2021/11/logo-Lorient.jpg', //https://www.sbmarches.bzh/wp-content/uploads/2024/02/marches_hebdomadaires_sbmarches-3.jpg
-    title: 'Lorient'
+    // url: 'https://lekiosque.bzh/wp-content/uploads/2021/11/logo-Lorient.jpg', //https://www.sbmarches.bzh/wp-content/uploads/2024/02/marches_hebdomadaires_sbmarches-3.jpg
+    name: 'Lorient'
   },
   {
     id: 'Quiberon',
-    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWihINjq4L4Myw7fY5mgC_1kh2tKc8AoeOUjFvKXq4Q2BosM1or0hF46xL2SfKkicEW-E&usqp=CAU',
-    title: 'Quiberon'
+    // url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWihINjq4L4Myw7fY5mgC_1kh2tKc8AoeOUjFvKXq4Q2BosM1or0hF46xL2SfKkicEW-E&usqp=CAU',
+    name: 'Quiberon'
   },
   {
     id: 'Pontivy',
-    url: 'https://ville-pontivy.bzh/wp-content/uploads/2024/01/PONTIVY-Logo_N-scaled.jpg',
-    title: 'Pontivy'
+    //url: 'https://ville-pontivy.bzh/wp-content/uploads/2024/01/PONTIVY-Logo_N-scaled.jpg',
+    name: 'Pontivy'
   }
 ];
 
 const newCityPlaceHolder = {
   id: 'newCityPlaceholder',
-  url: '', //'https://ville-pontivy.bzh/wp-content/uploads/2024/01/PONTIVY-Logo_N-scaled.jpg',
-  title: 'Ajouter une nouvelle ville'
+  //url: '', //'https://ville-pontivy.bzh/wp-content/uploads/2024/01/PONTIVY-Logo_N-scaled.jpg',
+  name: 'Ajouter une nouvelle ville'
 };
 
 function Cities(): JSX.Element {
@@ -50,12 +50,12 @@ function Cities(): JSX.Element {
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2} columns={{ xs: 2, sm: 8, md: 12 }}>
         {allCities.concat(newCityPlaceHolder).map(city => (
-          <Grid item xs={2} sm={4} md={4} key={city.title} style={{ textAlign: 'center' }}>
-            <Card id={city.id} title={city.title} url={city.url} onClick={onClick} />
+          <Grid item xs={2} sm={4} md={4} key={city.name} style={{ textAlign: 'center' }}>
+            <Card id={city.id} title={city.name} url={''} onClick={onClick} />
           </Grid>
         ))}
       </Grid>
-      <CityModal open={open} onClose={() => setIsOpened(false)} onCityCreated={onCityCreated} />
+      {/* <CityModal open={open} onClose={() => setIsOpened(false)} onCityCreated={onCityCreated} /> */}
     </Box>
   );
 }

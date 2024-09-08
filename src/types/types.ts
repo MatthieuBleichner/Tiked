@@ -1,12 +1,11 @@
 export interface ICity {
   id: string;
-  url: string;
-  title: string;
+  name: string;
 }
 
 export interface IMarket {
   id: string;
-  title: string;
+  name: string;
   city: ICity;
   dates: string;
   color: string;

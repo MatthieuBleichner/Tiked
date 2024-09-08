@@ -55,7 +55,7 @@ function MarketCard(props: MarketCardProps): JSX.Element {
             height: 100
           }}>
           <Typography variant={'h6'} fontWeight={'bold'} sx={{ marginRight: 1 }}>
-            {market.title}
+            {market.name}
           </Typography>
           <Typography sx={{ marginRight: 1 }}>{market.dates}</Typography>
         </Box>

@@ -2,6 +2,9 @@ import React from 'react';
 import Dashboard from './pages/Dashboard/Dashboard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const theme = createTheme({
   palette: {
@@ -12,9 +15,11 @@ const theme = createTheme({
 });
 function App(): JSX.Element {
   return (
-    <ThemeProvider theme={theme}>
-      <Dashboard />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <Dashboard />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 export default App;

@@ -5,7 +5,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { CitiesAndMarketsHorizontalPanel, VerticalDrawer, TopMenu } from 'components';
-import { MockedMarkets, MockedCities } from 'MockedDatas';
 import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -41,7 +40,6 @@ const Page: React.FC<PageProps> = ({ title }) => {
 };
 export default function Dashboard() {
   const isMobile = useMediaQuery(`(max-width: 760px)`);
-  const open = !isMobile;
 
   return (
     <Box sx={{ display: 'flex', bgcolor: grey[200], width: '100%', height: '100vh' }}>
@@ -65,11 +63,7 @@ export default function Dashboard() {
                 width: '100%',
                 padding: { xs: 1, md: 2 }
               }}>
-              <CitiesAndMarketsHorizontalPanel
-                cities={MockedCities}
-                markets={MockedMarkets}
-                setCurrentMarket={() => {}}
-              />
+              <CitiesAndMarketsHorizontalPanel />
             </Box>
             <Box
               sx={{

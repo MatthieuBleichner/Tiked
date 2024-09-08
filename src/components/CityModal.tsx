@@ -66,16 +66,15 @@ function CityModal(props: CityModalProps) {
     if (
       cityRef?.current?.value === null ||
       cityRef?.current?.value === undefined ||
-      urlRef?.current?.value === null ||
-      urlRef?.current?.value === undefined ||
+      // urlRef?.current?.value === null ||
+      // urlRef?.current?.value === undefined ||
       postalCodeRef?.current?.value === null ||
       postalCodeRef?.current?.value === undefined
     )
       return;
     onCityCreated({
       id: cityRef.current.value,
-      url: urlRef?.current?.value,
-      title: cityRef?.current?.value
+      name: cityRef?.current?.value
     });
     onClose();
   };
