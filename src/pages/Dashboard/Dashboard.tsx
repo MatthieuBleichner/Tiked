@@ -7,6 +7,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { CitiesAndMarketsHorizontalPanel, VerticalDrawer, TopMenu } from 'components';
 import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Clients from '../Clients/Clients';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -19,8 +20,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 interface PageProps {
   title: string;
+  children: JSX.Element | undefined;
 }
-const Page: React.FC<PageProps> = ({ title }) => {
+const Page: React.FC<PageProps> = ({ title, children }) => {
   return (
     <Box
       sx={{
@@ -35,6 +37,7 @@ const Page: React.FC<PageProps> = ({ title }) => {
       <Typography variant="h4" noWrap component="div" sx={{ color: '#263dad', fontWeight: 600 }}>
         {title}
       </Typography>
+      {children}
     </Box>
   );
 };
@@ -76,10 +79,38 @@ export default function Dashboard() {
                 flexGrow: 1
               }}>
               <Routes>
-                <Route path="/CLIENTS" element={<Page title={'Clients'} />} />
-                <Route path="/TARIFS" element={<Page title={'Tarifs'} />} />
-                <Route path="/FACTURATION" element={<Page title={'Facturations'} />} />
-                <Route path="/EDITION" element={<Page title={'Edition'} />} />
+                <Route
+                  path="/CLIENTS"
+                  element={
+                    <Page title={'Clients'}>
+                      <Clients />
+                    </Page>
+                  }
+                />
+                <Route
+                  path="/TARIFS"
+                  element={
+                    <Page title={'Tarifs'}>
+                      <Clients />
+                    </Page>
+                  }
+                />
+                <Route
+                  path="/FACTURATION"
+                  element={
+                    <Page title={'Facturations'}>
+                      <Clients />
+                    </Page>
+                  }
+                />
+                <Route
+                  path="/EDITION"
+                  element={
+                    <Page title={'Edition'}>
+                      <Clients />
+                    </Page>
+                  }
+                />
               </Routes>
             </Box>
           </Box>

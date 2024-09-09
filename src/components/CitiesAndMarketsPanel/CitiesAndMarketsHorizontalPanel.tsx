@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { ICity, IMarket } from 'types/types';
 import { useQuery } from '@tanstack/react-query';
+import useSelectedData from 'contexts/market/useSelectedData';
 
 const API_URL = 'https://tiked-back.vercel.app/api/';
 
@@ -19,34 +20,39 @@ const fetchCities: () => Promise<Response> = () => {
 };
 
 function CitiesAndMarketsHorizontalPanel(): JSX.Element {
+  const { setCurrentMarket, setCurrentCity } = useSelectedData();
+
   const { data: cities } = useQuery<ICity[]>({
     queryKey: ['repoData'],
     queryFn: () => fetchCities().then(res => res.json())
   });
 
-  const [currentCity, setCurrentCity] = useState<ICity>();
+  const [selectedCity, setSelectedCity] = useState<ICity>();
   useEffect(() => {
     if (cities?.length) {
+      setSelectedCity(cities[0]);
       setCurrentCity(cities[0]);
     }
   }, [cities]);
 
   const { data: markets } = useQuery<IMarket[]>({
-    queryKey: ['repoMarkets', currentCity?.id],
-    queryFn: () => fetchMarkets(currentCity?.id).then(res => res.json()),
-    enabled: !!currentCity?.id
+    queryKey: ['repoMarkets', selectedCity?.id],
+    queryFn: () => fetchMarkets(selectedCity?.id).then(res => res.json()),
+    enabled: !!selectedCity?.id
   });
 
-  const [currentMarket, setCurrentMarket] = useState<ICity>();
+  const [selectedMarket, setSelectedMarket] = useState<ICity>();
   useEffect(() => {
     if (markets?.length) {
       setCurrentMarket(markets[0]);
+      setSelectedMarket(markets[0]);
     }
   }, [markets]);
 
   const handleChange = (event: SelectChangeEvent) => {
     const targetedcity = cities?.find(city => city.id === event.target.value);
     if (targetedcity) {
+      setSelectedCity(targetedcity);
       setCurrentCity(targetedcity);
     }
   };
@@ -55,6 +61,7 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
     const currentMarket = markets?.find(market => market.id === event?.target.value);
     if (currentMarket) {
       setCurrentMarket(currentMarket);
+      setSelectedMarket(currentMarket);
     }
   };
 
@@ -85,7 +92,7 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
         <Select
           labelId="ville-select-label"
           id="ville-select"
-          value={currentCity?.id || ''}
+          value={selectedCity?.id || ''}
           label="Age"
           onChange={handleChange}
           sx={{
@@ -127,7 +134,7 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
           <Select
             labelId="market-select-label"
             id="market-select"
-            value={currentMarket?.id || ''}
+            value={selectedMarket?.id || ''}
             label="Age"
             onChange={handleMarketChange}
             sx={{
