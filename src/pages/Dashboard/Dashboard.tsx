@@ -8,6 +8,7 @@ import { CitiesAndMarketsHorizontalPanel, VerticalDrawer, TopMenu } from 'compon
 import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Clients from '../Clients/Clients';
+import Pricing from '../Pricing/Pricing';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -81,14 +82,7 @@ export default function Dashboard() {
               <Routes>
                 <Route path="/" element={<Navigate to="/CLIENTS" />} />
                 <Route path="/CLIENTS" element={<Clients />} />
-                <Route
-                  path="/TARIFS"
-                  element={
-                    <Page title={'Tarifs'}>
-                      <Clients />
-                    </Page>
-                  }
-                />
+                <Route path="/TARIFS" element={<Pricing />} />
                 <Route
                   path="/FACTURATION"
                   element={

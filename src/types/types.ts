@@ -18,3 +18,10 @@ export interface IClient {
   cityId: string;
   siren: string;
 }
+
+export interface IPricing {
+  id: string;
+  name: string;
+  price: number;
+  marketId: string;
+}
