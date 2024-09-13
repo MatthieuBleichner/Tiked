@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { CitiesAndMarketsHorizontalPanel, VerticalDrawer, TopMenu } from 'components';
 import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -79,6 +79,7 @@ export default function Dashboard() {
                 flexGrow: 1
               }}>
               <Routes>
+                <Route path="/" element={<Navigate to="/CLIENTS" />} />
                 <Route path="/CLIENTS" element={<Clients />} />
                 <Route
                   path="/TARIFS"

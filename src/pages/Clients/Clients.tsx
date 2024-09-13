@@ -66,7 +66,7 @@ const Clients: React.FC = () => {
     mutation.mutate(client);
   };
 
-  const [open, setIsOpened] = useState(true);
+  const [open, setIsOpened] = useState(false);
 
   if (!currentCity) {
     return null;
