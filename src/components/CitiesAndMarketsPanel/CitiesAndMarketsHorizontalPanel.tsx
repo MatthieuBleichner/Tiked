@@ -8,15 +8,15 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { ICity, IMarket } from 'types/types';
 import { useQuery } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
-
-const API_URL = 'https://tiked-back.vercel.app/api/';
+import { formatResponse } from 'api/utils';
+import { config } from 'config';
 
 const fetchMarkets: (arg0: string | undefined) => Promise<Response> = async cityId => {
-  return fetch(`${API_URL}markets?cityId=${cityId}`);
+  return fetch(`${config.API_URL}markets?cityId=${cityId}`);
 };
 
 const fetchCities: () => Promise<Response> = () => {
-  return fetch(`${API_URL}cities`);
+  return fetch(`${config.API_URL}cities`);
 };
 
 function CitiesAndMarketsHorizontalPanel(): JSX.Element {
@@ -24,7 +24,10 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
 
   const { data: cities } = useQuery<ICity[]>({
     queryKey: ['repoData'],
-    queryFn: () => fetchCities().then(res => res.json())
+    queryFn: () =>
+      fetchCities()
+        .then(res => res.json())
+        .then(data => formatResponse(data) as ICity[])
   });
 
   const [selectedCity, setSelectedCity] = useState<ICity>();
@@ -37,7 +40,10 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
 
   const { data: markets } = useQuery<IMarket[]>({
     queryKey: ['repoMarkets', selectedCity?.id],
-    queryFn: () => fetchMarkets(selectedCity?.id).then(res => res.json()),
+    queryFn: () =>
+      fetchMarkets(selectedCity?.id).then(res =>
+        res.json().then(data => formatResponse(data) as IMarket[])
+      ),
     enabled: !!selectedCity?.id
   });
 

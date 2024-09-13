@@ -13,8 +13,8 @@ export interface IMarket {
 
 export interface IClient {
   id: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   cityId: string;
   siren: string;
 }

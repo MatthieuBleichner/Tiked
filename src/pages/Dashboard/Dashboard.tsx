@@ -79,14 +79,7 @@ export default function Dashboard() {
                 flexGrow: 1
               }}>
               <Routes>
-                <Route
-                  path="/CLIENTS"
-                  element={
-                    <Page title={'Clients'}>
-                      <Clients />
-                    </Page>
-                  }
-                />
+                <Route path="/CLIENTS" element={<Clients />} />
                 <Route
                   path="/TARIFS"
                   element={
