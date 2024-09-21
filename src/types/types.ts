@@ -25,3 +25,9 @@ export interface IPricing {
   price: number;
   marketId: string;
 }
+
+export interface IBalanceSheet {
+  id: string;
+  date: Date;
+  marketId: string;
+}

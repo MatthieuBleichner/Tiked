@@ -9,6 +9,7 @@ import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Clients from '../Clients/Clients';
 import Pricing from '../Pricing/Pricing';
+import BalanceSheets from '../Edition/BalanceSheets';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -91,14 +92,7 @@ export default function Dashboard() {
                     </Page>
                   }
                 />
-                <Route
-                  path="/EDITION"
-                  element={
-                    <Page title={'Edition'}>
-                      <Clients />
-                    </Page>
-                  }
-                />
+                <Route path="/EDITION" element={<BalanceSheets />} />
               </Routes>
             </Box>
           </Box>
