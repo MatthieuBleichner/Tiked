@@ -19,6 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
+import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal';
 
 interface IBalanceSheetResponse {
   id: string;
@@ -99,6 +100,14 @@ const BalanceSheets: React.FC = () => {
     mutation.mutate(balanceSheet);
   };
 
+  //const [open, setOpen] = React.useState(false);
+  const [selectedSheet, setSelectedSheet] = React.useState<IBalanceSheet | undefined | null>();
+  const handleOpen = (e: React.MouseEvent<HTMLTableCellElement>) => {
+    console.log(e.currentTarget.id);
+    setSelectedSheet(sheets?.find(sheet => sheet.id === e.currentTarget.id));
+  };
+  const handleClose = () => setSelectedSheet(null);
+
   if (!currentMarket) {
     return null;
   }
@@ -174,7 +183,11 @@ const BalanceSheets: React.FC = () => {
                 <TableRow
                   key={balanceSheet.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client">
+                  <TableCell
+                    id={balanceSheet.id}
+                    component="th"
+                    scope="client"
+                    onClick={handleOpen}>
                     {balanceSheet.date.toLocaleString('fr-FR', { weekday: 'long' }) +
                       ' ' +
                       balanceSheet.date.getDate() +
@@ -189,6 +202,11 @@ const BalanceSheets: React.FC = () => {
           </Table>
         </TableContainer>
       </Box>
+      <BalanceSheetModal
+        open={!!selectedSheet}
+        handleClose={handleClose}
+        balanceSheet={selectedSheet}
+      />
     </Box>
   );
 };

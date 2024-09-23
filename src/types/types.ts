@@ -31,3 +31,10 @@ export interface IBalanceSheet {
   date: Date;
   marketId: string;
 }
+
+export interface IBalanceSheetDetails {
+  id: string;
+  balanceSheetId: string;
+  clientId: string;
+  total: number;
+}
