@@ -19,7 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal';
+import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
 
 interface IBalanceSheetResponse {
   id: string;
@@ -67,6 +67,7 @@ const BalanceSheets: React.FC = () => {
         }),
     enabled: !!currentMarket?.id
   });
+
 
   const mutation = useMutation({
     mutationFn: (newSheet: IBalanceSheet) => {

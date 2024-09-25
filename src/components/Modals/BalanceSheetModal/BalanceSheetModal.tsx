@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
+import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import Table from '@mui/material/Table';
@@ -20,17 +18,12 @@ import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import { IBalanceSheetDetails, IBalanceSheet, ICity, IClient } from 'types/types';
 import { config } from 'config';
-import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
-import { formatResponse, formatQueryData } from 'api/utils';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { formatResponse } from 'api/utils';
 import useSelectedData from 'contexts/market/useSelectedData';
-import { v6 as uuid } from 'uuid';
-import BalanceSheetDetailsPDF from '../PDF/BalanceSheetDetailsPDF';
+import BalanceSheetDetailsPDF from '../../PDF/BalanceSheetDetailsPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-
+import DetailsCreation from './DetailsCreation';
 const styles = {
   btn: {
     borderRadius: '3px',
@@ -75,18 +68,7 @@ interface BalanceSheetModalProps {
   balanceSheet: IBalanceSheet | undefined | null;
 }
 export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSheetModalProps) => {
-  const [selectedClientId, setSelectedClientId] = useState<string>();
-  const [total, setTotal] = useState<number>(0);
-
   const { currentCity, currentMarket } = useSelectedData();
-
-  const handleClientChange = (event: SelectChangeEvent) => {
-    setSelectedClientId(event.target.value);
-  };
-
-  const handleTotalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTotal(Number(event.target.value));
-  };
 
   const { data: clients = [] } = useQuery<IClient[]>({
     queryKey: ['clients', currentCity?.id],
@@ -94,7 +76,6 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
       fetchClients(currentCity)
         .then(res => res.json())
         .then(res => {
-          res.length && setSelectedClientId(res[0].id);
           return formatResponse(res) as IClient[];
         }),
     enabled: !!currentCity?.id
@@ -112,42 +93,12 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
     enabled: !!balanceSheet
   });
 
-  const mutation = useMutation({
-    mutationFn: (newBalanceSheetDetail: IBalanceSheetDetails) => {
-      console.log('mutationFn', newBalanceSheetDetail);
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formatQueryData(newBalanceSheetDetail))
-      };
-      return fetch(`${config.API_URL}balanceSheetDetail?`, requestOptions)
-        .then(response => response.json())
-        .then(response => formatResponse(response));
-    },
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData(
-        ['details', balanceSheet?.id],
-        [...details, ...(data as IBalanceSheetDetails[])]
-      );
-      console.log('Dans le onSuccess, data :', data, 'variables :', variables);
-    },
-    onError: error => {
-      console.error('Error adding balance sheet details:', error);
-    }
-  });
-
-  const handleAddDetail = () => {
-    selectedClientId &&
-      total &&
-      balanceSheet?.id &&
-      mutation.mutate({
-        id: uuid(),
-        clientId: selectedClientId,
-        total: total,
-        balanceSheetId: balanceSheet?.id
-      });
+  const onAddDetail = (detail: IBalanceSheetDetails[]) => {
+    console.log('detail', detail);
+    queryClient.setQueryData(['details', balanceSheet?.id], [...details, ...detail]);
   };
 
+  console.log('details', details);
   return (
     <React.Fragment>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -174,7 +125,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               </Typography>
             </Box>
 
-            {currentMarket && balanceSheet && currentCity && details ? (
+            {currentMarket && balanceSheet && currentCity && details?.length > 0 ? (
               <PDFDownloadLink
                 document={
                   <BalanceSheetDetailsPDF
@@ -236,58 +187,16 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               justifyContent: 'center',
               flexDirection: 'row'
             }}>
-            <FormControl>
-              <InputLabel
-                id="ville-select-label"
-                sx={{
-                  color: '#2e2e2e',
-                  '&.Mui-focused': {
-                    color: '#000'
-                  }
-                }}>
-                Client
-              </InputLabel>
-              <Select
-                labelId="ville-select-label"
-                id="ville-select"
-                value={selectedClientId}
-                label="Age"
-                onChange={handleClientChange}
-                sx={{
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'darkgray'
-                  },
-                  '& .MuiInputLabel-outlined': {
-                    color: '#2e2e2e',
-                    fontWeight: 'red'
-                  },
-                  minWidth: 120
-                }}>
-                {clients !== undefined &&
-                  clients?.map(client => (
-                    <MenuItem key={client.id} value={client.id}>
-                      {`${client.firstName} ${client.lastName}`}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-            <TextField
-              id="outlined-number"
-              label="Prix €"
-              type="number"
-              variant="outlined"
-              onChange={handleTotalChange}
-            />
-            <Button
-              variant="contained"
-              size="medium"
-              style={{ marginTop: 5 }}
-              onClick={handleAddDetail}>
-              Ajouter
-            </Button>
+            <DetailsCreation balanceSheet={balanceSheet} onAddDetail={onAddDetail} />
           </Box>
         )}
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
           <TableContainer component={Paper} sx={{ width: '50%' }}>
             <Table aria-label="simple table">
               <TableHead>
@@ -312,6 +221,23 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                     </TableRow>
                   );
                 })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer component={Paper} sx={{ width: '50%', marginTop: 2 }}>
+            <Table aria-label="simple table">
+              <TableBody>
+                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell component="th" scope="client">
+                    Total
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    scope="client"
+                    sx={{ margin: 'auto', textAlign: 'center' }}>
+                    {`${details?.reduce((acc, detail) => acc + detail.total, 0)} €`}
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
