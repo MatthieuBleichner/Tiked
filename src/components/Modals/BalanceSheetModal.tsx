@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import List from '@mui/material/List';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
+import DownloadIcon from '@mui/icons-material/Download';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -23,13 +22,29 @@ import { IBalanceSheetDetails, IBalanceSheet, ICity, IClient } from 'types/types
 import { config } from 'config';
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 import { formatResponse, formatQueryData } from 'api/utils';
-import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import useSelectedData from 'contexts/market/useSelectedData';
 import { v6 as uuid } from 'uuid';
+import BalanceSheetDetailsPDF from '../PDF/BalanceSheetDetailsPDF';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+
+const styles = {
+  btn: {
+    borderRadius: '3px',
+    border: '1px solid gray',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '2px',
+    padding: '3px',
+    fontSize: '11px',
+    color: '#4f4f4f',
+    fontWeight: 600,
+    cursor: 'pointer'
+  }
+};
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -60,16 +75,6 @@ interface BalanceSheetModalProps {
   balanceSheet: IBalanceSheet | undefined | null;
 }
 export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSheetModalProps) => {
-  //   const [open, setOpen] = React.useState(false);
-
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
-
-  //   const handleClose = () => {
-  //     setOpen(false);
-  //   };
-
   const [selectedClientId, setSelectedClientId] = useState<string>();
   const [total, setTotal] = useState<number>(0);
 
@@ -168,9 +173,34 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                 {currentMarket?.name + ' - ' + currentCity?.name}
               </Typography>
             </Box>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
+
+            {currentMarket && balanceSheet && currentCity && details ? (
+              <PDFDownloadLink
+                document={
+                  <BalanceSheetDetailsPDF
+                    currentMarket={currentMarket}
+                    currentCity={currentCity}
+                    balanceSheet={balanceSheet}
+                    balanceSheetDetails={details}
+                    clients={clients}
+                  />
+                }
+                fileName={`${currentCity.name}-${currentMarket.name}-${balanceSheet?.date.toLocaleDateString(
+                  'fr-FR',
+                  {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric'
+                  }
+                )}`}>
+                <div style={styles.btn}>
+                  <DownloadIcon />
+                  <span>PDF</span>
+                </div>
+              </PDFDownloadLink>
+            ) : (
+              <></>
+            )}
           </Toolbar>
         </AppBar>
         <Box
