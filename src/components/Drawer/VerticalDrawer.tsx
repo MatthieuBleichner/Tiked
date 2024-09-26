@@ -30,7 +30,7 @@ const SectionIcon = (props: SectionIconsProps) => {
     return <BarChart />;
   } else if (title === 'FACTURATION') {
     return <EditNote />;
-  } else if (title === 'EDITION') {
+  } else if (title === 'BILAN') {
     return <AccountBalance />;
   } else {
     return <StorefrontIcon />;
@@ -104,7 +104,7 @@ const VerticalDrawer = () => {
       <DrawerHeader />
       <Divider />
       <List>
-        {['CLIENTS', 'TARIFS', 'FACTURATION', 'EDITION'].map(text => (
+        {['CLIENTS', 'TARIFS' /*, 'FACTURATION'*/, 'BILAN'].map(text => (
           <ListItem key={text} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               component={Link}

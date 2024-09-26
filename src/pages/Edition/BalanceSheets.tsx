@@ -68,7 +68,6 @@ const BalanceSheets: React.FC = () => {
     enabled: !!currentMarket?.id
   });
 
-
   const mutation = useMutation({
     mutationFn: (newSheet: IBalanceSheet) => {
       const formatedSheet = formatQueryData(newSheet);

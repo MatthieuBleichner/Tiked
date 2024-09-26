@@ -84,15 +84,15 @@ export default function Dashboard() {
                 <Route path="/" element={<Navigate to="/CLIENTS" />} />
                 <Route path="/CLIENTS" element={<Clients />} />
                 <Route path="/TARIFS" element={<Pricing />} />
-                <Route
+                {/* <Route
                   path="/FACTURATION"
                   element={
                     <Page title={'Facturations'}>
                       <Clients />
                     </Page>
                   }
-                />
-                <Route path="/EDITION" element={<BalanceSheets />} />
+                /> */}
+                <Route path="/BILAN" element={<BalanceSheets />} />
               </Routes>
             </Box>
           </Box>
