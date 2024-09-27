@@ -92,24 +92,31 @@ const Clients: React.FC = () => {
             Clients
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', direction: 'row', flex: 1, justifyContent: 'flex-end' }}>
-          <Button
-            variant="outlined"
-            sx={{
+      </Box>
+      <Box
+        sx={{
+          paddingLeft: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          width: '50%'
+        }}>
+        <Button
+          variant="outlined"
+          sx={{
+            backgroundColor: '#263dad',
+            //color: 'black',
+            '&:hover': {
               backgroundColor: '#263dad',
-              //color: 'black',
-              '&:hover': {
-                backgroundColor: '#263dad',
-                opacity: 0.8
-              },
-              '&:disabled': {
-                backgroundColor: 'green'
-              }
-            }}
-            onClick={() => setIsOpened(true)}>
-            Nouveau client
-          </Button>
-        </Box>
+              opacity: 0.8
+            },
+            '&:disabled': {
+              backgroundColor: 'green'
+            }
+          }}
+          onClick={() => setIsOpened(true)}>
+          Nouveau client
+        </Button>
       </Box>
       <Box
         sx={{
@@ -117,33 +124,36 @@ const Clients: React.FC = () => {
           borderRadius: 5,
           //marginTop: 2,
           height: '80%',
-          padding: 2
+          padding: 2,
+          display: 'flex'
           //paddingLeft: 5
         }}>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell align="right">Last Name</TableCell>
-                <TableCell align="right">Siren</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {clients?.map(client => (
-                <TableRow
-                  key={client.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client">
-                    {client.firstName}
-                  </TableCell>
-                  <TableCell align="right">{client.lastName}</TableCell>
-                  <TableCell align="right">{client.siren}</TableCell>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Prénom</TableCell>
+                  <TableCell align="center">Nom</TableCell>
+                  <TableCell align="center">Siren</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {clients?.map(client => (
+                  <TableRow
+                    key={client.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell align="center" component="th" scope="client">
+                      {client.firstName}
+                    </TableCell>
+                    <TableCell align="center">{client.lastName}</TableCell>
+                    <TableCell align="center">{client.siren}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
         <ClientModal
           open={open}
           onClose={() => setIsOpened(false)}

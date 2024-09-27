@@ -202,11 +202,13 @@ const BalanceSheets: React.FC = () => {
           </Table>
         </TableContainer>
       </Box>
-      <BalanceSheetModal
-        open={!!selectedSheet}
-        handleClose={handleClose}
-        balanceSheet={selectedSheet}
-      />
+      {selectedSheet && (
+        <BalanceSheetModal
+          open={!!selectedSheet}
+          handleClose={handleClose}
+          balanceSheet={selectedSheet}
+        />
+      )}
     </Box>
   );
 };

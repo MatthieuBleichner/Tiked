@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,6 +17,7 @@ import Paper from '@mui/material/Paper';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { IBalanceSheetDetails, IBalanceSheet, ICity, IClient } from 'types/types';
 import { config } from 'config';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -23,7 +25,7 @@ import { formatResponse } from 'api/utils';
 import useSelectedData from 'contexts/market/useSelectedData';
 import BalanceSheetDetailsPDF from '../../PDF/BalanceSheetDetailsPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import DetailsCreation from './DetailsCreation';
+import BalanceSheetDetailsModal from '../BalanceSheetDetailsModal';
 const styles = {
   btn: {
     borderRadius: '3px',
@@ -65,7 +67,7 @@ const fetchClients: (arg0: ICity | undefined) => Promise<Response> = async curre
 interface BalanceSheetModalProps {
   open: boolean;
   handleClose: () => void;
-  balanceSheet: IBalanceSheet | undefined | null;
+  balanceSheet: IBalanceSheet;
 }
 export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSheetModalProps) => {
   const { currentCity, currentMarket } = useSelectedData();
@@ -98,6 +100,11 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
     queryClient.setQueryData(['details', balanceSheet?.id], [...details, ...detail]);
   };
 
+  const [inEditMode, setInEditMode] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
+  const onEditButtonPress = () => setInEditMode(!inEditMode);
+
   console.log('details', details);
   return (
     <React.Fragment>
@@ -125,6 +132,9 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               </Typography>
             </Box>
 
+            <IconButton edge="start" color="inherit" onClick={onEditButtonPress} aria-label="edit">
+              <EditIcon />
+            </IconButton>
             {currentMarket && balanceSheet && currentCity && details?.length > 0 ? (
               <PDFDownloadLink
                 document={
@@ -178,7 +188,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               balanceSheet?.date.getFullYear()}
           </Typography>
         </Box>
-        {!!clients && (
+        {!!clients && inEditMode && (
           <Box
             sx={{
               margin: 2,
@@ -187,7 +197,23 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               justifyContent: 'center',
               flexDirection: 'row'
             }}>
-            <DetailsCreation balanceSheet={balanceSheet} onAddDetail={onAddDetail} />
+            <Button
+              variant="outlined"
+              sx={{
+                backgroundColor: '#263dad',
+                //color: 'black',
+                '&:hover': {
+                  backgroundColor: '#263dad',
+                  opacity: 0.8
+                },
+                '&:disabled': {
+                  backgroundColor: 'green'
+                }
+              }}
+              onClick={() => setOpenModal(true)}>
+              Nouvelle entrée
+            </Button>
+            {/* <DetailsCreation balanceSheet={balanceSheet} onAddDetail={onAddDetail} /> */}
           </Box>
         )}
         <Box
@@ -201,8 +227,10 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Client</TableCell>
-                  <TableCell>A payé</TableCell>
+                  <TableCell align="left" sx={{ width: '50%' }}>
+                    Client
+                  </TableCell>
+                  <TableCell align="center">A payé</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -212,10 +240,10 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                     <TableRow
                       key={detail.id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                      <TableCell id={client?.id} component="th" scope="client">
+                      <TableCell id={client?.id} component="th" scope="client" align="left">
                         {`${client?.firstName} ${client?.lastName}`}
                       </TableCell>
-                      <TableCell id={detail.id} component="th" scope="client">
+                      <TableCell id={detail.id} component="th" scope="client" align="center">
                         {`${detail?.total} €`}
                       </TableCell>
                     </TableRow>
@@ -228,13 +256,10 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
             <Table aria-label="simple table">
               <TableBody>
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client">
+                  <TableCell component="th" scope="client" align="left" sx={{ width: '50%' }}>
                     Total
                   </TableCell>
-                  <TableCell
-                    component="th"
-                    scope="client"
-                    sx={{ margin: 'auto', textAlign: 'center' }}>
+                  <TableCell component="th" scope="client" align="center">
                     {`${details?.reduce((acc, detail) => acc + detail.total, 0)} €`}
                   </TableCell>
                 </TableRow>
@@ -243,6 +268,12 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
           </TableContainer>
         </Box>
       </Dialog>
+      <BalanceSheetDetailsModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        balanceSheet={balanceSheet}
+        onAddDetail={onAddDetail}
+      />
     </React.Fragment>
   );
 };

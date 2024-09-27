@@ -70,31 +70,34 @@ const Pricing: React.FC = () => {
           borderRadius: 5,
           //marginTop: 2,
           height: '80%',
-          padding: 2
+          padding: 2,
+          display: 'flex'
           //paddingLeft: 5
         }}>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nom</TableCell>
-                <TableCell align="right">Tarif</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {pricings?.map(pricing => (
-                <TableRow
-                  key={pricing.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client">
-                    {pricing.name}
-                  </TableCell>
-                  <TableCell align="right">{pricing.price} €</TableCell>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Nom</TableCell>
+                  <TableCell align="right">Tarif</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {pricings?.map(pricing => (
+                  <TableRow
+                    key={pricing.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell component="th" scope="client">
+                      {pricing.name}
+                    </TableCell>
+                    <TableCell align="right">{pricing.price} €</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Box>
     </Box>
   );
