@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { IBalanceSheet, IMarket } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Table from '@mui/material/Table';
@@ -12,14 +12,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
-import { formatResponse, formatQueryData } from 'api/utils';
+import { formatResponse } from 'api/utils';
 import { config } from 'config';
-import { v4 as uuid } from 'uuid';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Dayjs } from 'dayjs';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
+import Button from '@mui/material/Button';
+import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
 
 interface IBalanceSheetResponse {
   id: string;
@@ -52,7 +49,6 @@ const fetchBalanceSheets: (
 const BalanceSheets: React.FC = () => {
   const queryClient = useQueryClient();
   const { currentMarket } = useSelectedData();
-  //const [clients, setClients] = useState<IClient[]>([]);
 
   const { data: sheets = [] } = useQuery<IBalanceSheet[]>({
     queryKey: ['sheets', currentMarket?.id],
@@ -68,39 +64,6 @@ const BalanceSheets: React.FC = () => {
     enabled: !!currentMarket?.id
   });
 
-  const mutation = useMutation({
-    mutationFn: (newSheet: IBalanceSheet) => {
-      const formatedSheet = formatQueryData(newSheet);
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formatQueryData(formatedSheet))
-      };
-      return fetch(`${config.API_URL}balanceSheet?`, requestOptions)
-        .then(response => response.json())
-        .then(response => {
-          return (formatResponse(response) as IBalanceSheetResponse[]).map(
-            (sheet: { id: string; marketId: string; date: string }) =>
-              buildBalanceSheet(sheet.id, sheet.marketId, sheet.date)
-          ) as IBalanceSheet[];
-        });
-    },
-    onSuccess: data => {
-      queryClient.setQueryData(
-        ['sheets', currentMarket?.id],
-        [...sheets, ...(data as IBalanceSheet[])]
-      );
-    },
-    onError: error => {
-      console.error('Error adding sheet:', error);
-    }
-  });
-
-  const handleAddBalanceSheet = (balanceSheet: IBalanceSheet) => {
-    mutation.mutate(balanceSheet);
-  };
-
-  //const [open, setOpen] = React.useState(false);
   const [selectedSheet, setSelectedSheet] = React.useState<IBalanceSheet | undefined | null>();
   const handleOpen = (e: React.MouseEvent<HTMLTableCellElement>) => {
     console.log(e.currentTarget.id);
@@ -108,9 +71,12 @@ const BalanceSheets: React.FC = () => {
   };
   const handleClose = () => setSelectedSheet(null);
 
+  const [openCrationMode, setCreationModeIsOpened] = useState(false);
+
   if (!currentMarket) {
     return null;
   }
+
   return (
     <Box
       sx={{
@@ -132,35 +98,31 @@ const BalanceSheets: React.FC = () => {
             Facturation
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', direction: 'row', flex: 1, justifyContent: 'flex-end' }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label={'Nouveau bilan'}
-              closeOnSelect={false}
-              slotProps={{
-                actionBar: {
-                  sx: {
-                    //color: '#263dad',
-                    backgroundColor: '#263dad',
-                    borderRadius: '2px',
-                    borderColor: '#2196f3',
-                    border: '1px solid',
-                    flex: 1,
-                    display: 'flex'
-                  },
-                  actions: ['accept']
-                }
-              }}
-              onAccept={(val: Dayjs | null) => {
-                handleAddBalanceSheet({
-                  id: uuid(),
-                  date: new Date(val?.toString() ?? ''),
-                  marketId: currentMarket?.id
-                });
-              }}
-            />
-          </LocalizationProvider>
-        </Box>
+      </Box>
+      <Box
+        sx={{
+          paddingLeft: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          width: '50%'
+        }}>
+        <Button
+          variant="outlined"
+          sx={{
+            backgroundColor: '#263dad',
+            //color: 'black',
+            '&:hover': {
+              backgroundColor: '#263dad',
+              opacity: 0.8
+            },
+            '&:disabled': {
+              backgroundColor: 'green'
+            }
+          }}
+          onClick={() => setCreationModeIsOpened(true)}>
+          Nouveau Bilan
+        </Button>
       </Box>
       <Box
         sx={{
@@ -171,36 +133,38 @@ const BalanceSheets: React.FC = () => {
           padding: 2
           //paddingLeft: 5
         }}>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Date</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sheets?.map(balanceSheet => (
-                <TableRow
-                  key={balanceSheet.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell
-                    id={balanceSheet.id}
-                    component="th"
-                    scope="client"
-                    onClick={handleOpen}>
-                    {balanceSheet.date.toLocaleString('fr-FR', { weekday: 'long' }) +
-                      ' ' +
-                      balanceSheet.date.getDate() +
-                      ' ' +
-                      balanceSheet.date.toLocaleString('fr-FR', { month: 'long' }) +
-                      ' ' +
-                      balanceSheet.date.getFullYear()}
-                  </TableCell>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {sheets?.map(balanceSheet => (
+                  <TableRow
+                    key={balanceSheet.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell
+                      id={balanceSheet.id}
+                      component="th"
+                      scope="client"
+                      onClick={handleOpen}>
+                      {balanceSheet.date.toLocaleString('fr-FR', { weekday: 'long' }) +
+                        ' ' +
+                        balanceSheet.date.getDate() +
+                        ' ' +
+                        balanceSheet.date.toLocaleString('fr-FR', { month: 'long' }) +
+                        ' ' +
+                        balanceSheet.date.getFullYear()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Box>
       {selectedSheet && (
         <BalanceSheetModal
@@ -209,6 +173,13 @@ const BalanceSheets: React.FC = () => {
           balanceSheet={selectedSheet}
         />
       )}
+      <BalanceSheetCreationModal
+        open={openCrationMode}
+        onClose={() => setCreationModeIsOpened(false)}
+        onAddSheeet={data => {
+          queryClient.setQueryData(['sheets', currentMarket?.id], [...sheets, ...data]);
+        }}
+      />
     </Box>
   );
 };
