@@ -11,6 +11,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { grey } from '@mui/material/colors';
 
 const drawerWidth = 240;
 interface AppBarProps extends MuiAppBarProps {
@@ -34,7 +35,8 @@ const AppBar = styled(MuiAppBar, {
         transition: theme.transitions.create(['width', 'margin'], {
           easing: theme.transitions.easing.sharp,
           duration: theme.transitions.duration.enteringScreen
-        })
+        }),
+        backgroundColor: grey[100]
       }
     }
   ]
@@ -131,34 +133,30 @@ export default function TopMenu() {
               width: '100%',
               justifyContent: 'center',
               alignItems: 'center',
-              height: '100%'
+              height: '100%',
+              backgroundColor: grey[100]
             }}>
-            <Typography
-              variant="h4"
-              noWrap
-              component="div"
-              sx={{ color: '#263dad', fontWeight: 600 }}>
+            <Typography variant="h4" noWrap component="div">
               TIKED
             </Typography>
           </Box>
           <Box sx={{ position: 'absolute', display: 'flex', flex: 1, width: '97%' }}>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <IconButton size="large" aria-label="settings" color="inherit">
+              <IconButton size="large" aria-label="settings">
                 <SettingsIcon />
               </IconButton>
               <IconButton
                 size="large"
                 edge="end"
                 aria-label="account of current user"
-                aria-haspopup="true"
-                color="inherit">
+                aria-haspopup="true">
                 <AccountCircle />
               </IconButton>
             </Box>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton size="large" aria-label="show more" aria-haspopup="true" color="inherit">
+            <IconButton size="large" aria-label="show more" aria-haspopup="true">
               <MoreIcon />
             </IconButton>
           </Box>

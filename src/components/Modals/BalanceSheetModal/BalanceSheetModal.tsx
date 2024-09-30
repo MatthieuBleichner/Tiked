@@ -90,11 +90,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                 alignItems: 'center',
                 height: '100%'
               }}>
-              <Typography
-                variant="h4"
-                noWrap
-                component="div"
-                sx={{ color: '#263dad', fontWeight: 600 }}>
+              <Typography variant="h4" noWrap component="div">
                 {currentMarket?.name + ' - ' + currentCity?.name}
               </Typography>
             </Box>
@@ -102,6 +98,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
             <IconButton edge="start" color="inherit" onClick={onEditButtonPress} aria-label="edit">
               <EditIcon />
             </IconButton>
+
             {currentMarket && balanceSheet && currentCity && details?.length > 0 ? (
               <PDFDownloadLink
                 document={
@@ -121,10 +118,14 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                     day: 'numeric'
                   }
                 )}`}>
-                <div style={styles.btn}>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={onEditButtonPress}
+                  aria-label="edit"
+                  sx={{ color: '#FFFFFF' }}>
                   <DownloadIcon />
-                  <span>PDF</span>
-                </div>
+                </IconButton>
               </PDFDownloadLink>
             ) : (
               <></>
@@ -140,11 +141,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
             alignItems: 'center',
             height: '15%'
           }}>
-          <Typography
-            variant="h4"
-            noWrap
-            component="div"
-            sx={{ color: '#263dad', fontWeight: 600 }}>
+          <Typography variant="h4" noWrap component="div">
             {'Bilan du ' +
               balanceSheet?.date.toLocaleString('fr-FR', { weekday: 'long' }) +
               ' ' +
@@ -164,20 +161,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               justifyContent: 'center',
               flexDirection: 'row'
             }}>
-            <Button
-              variant="outlined"
-              sx={{
-                backgroundColor: '#263dad',
-                //color: 'black',
-                '&:hover': {
-                  backgroundColor: '#263dad',
-                  opacity: 0.8
-                },
-                '&:disabled': {
-                  backgroundColor: 'green'
-                }
-              }}
-              onClick={() => setOpenModal(true)}>
+            <Button variant="contained" onClick={() => setOpenModal(true)}>
               Nouvelle entrée
             </Button>
             {/* <DetailsCreation balanceSheet={balanceSheet} onAddDetail={onAddDetail} /> */}

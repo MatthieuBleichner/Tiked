@@ -25,22 +25,21 @@ const Pricing: React.FC = () => {
       sx={{
         flex: 1,
         borderRadius: 5,
-        //marginTop: 2,
         height: '80%',
         backgroundColor: grey[50],
         padding: 2
-        //paddingLeft: 5
       }}>
-      <Box sx={{ display: 'flex', direction: 'row', padding: 2 }}>
-        <Box sx={{ display: 'flex', direction: 'row', flex: 1, justifyContent: 'flex-start' }}>
-          <Typography
-            variant="h4"
-            noWrap
-            component="div"
-            sx={{ color: '#263dad', fontWeight: 600 }}>
-            Tarifs
-          </Typography>
-        </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          direction: 'row',
+          padding: 2,
+          flex: 1,
+          justifyContent: 'flex-start'
+        }}>
+        <Typography variant="h4" noWrap component="div">
+          Tarifs
+        </Typography>
       </Box>
       <Box
         sx={{

@@ -64,16 +64,17 @@ const Clients: React.FC = () => {
         padding: 2
         //paddingLeft: 5
       }}>
-      <Box sx={{ display: 'flex', direction: 'row', padding: 2 }}>
-        <Box sx={{ display: 'flex', direction: 'row', flex: 1, justifyContent: 'flex-start' }}>
-          <Typography
-            variant="h4"
-            noWrap
-            component="div"
-            sx={{ color: '#263dad', fontWeight: 600 }}>
-            Clients
-          </Typography>
-        </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          direction: 'row',
+          padding: 2,
+          flex: 1,
+          justifyContent: 'flex-start'
+        }}>
+        <Typography variant="h4" noWrap component="div">
+          Clients
+        </Typography>
       </Box>
       <Box
         sx={{
@@ -83,20 +84,7 @@ const Clients: React.FC = () => {
           justifyContent: 'flex-end',
           width: '50%'
         }}>
-        <Button
-          variant="outlined"
-          sx={{
-            backgroundColor: '#263dad',
-            //color: 'black',
-            '&:hover': {
-              backgroundColor: '#263dad',
-              opacity: 0.8
-            },
-            '&:disabled': {
-              backgroundColor: 'green'
-            }
-          }}
-          onClick={() => setIsOpened(true)}>
+        <Button variant="contained" onClick={() => setIsOpened(true)}>
           Nouveau client
         </Button>
       </Box>

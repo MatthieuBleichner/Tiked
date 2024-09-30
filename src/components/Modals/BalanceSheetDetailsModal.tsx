@@ -269,17 +269,9 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
               <Grid item container /*ju*/ sx={{ marginTop: 2 }}>
                 <Grid item xs={7} sm={3} md={3}>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     size="medium"
                     style={{ marginTop: 5 }}
-                    sx={{
-                      backgroundColor: '#263dad',
-                      //color: 'black',
-                      '&:hover': {
-                        backgroundColor: '#263dad',
-                        opacity: 0.8
-                      }
-                    }}
                     onClick={handleAddDetail}>
                     Valider
                   </Button>
@@ -287,16 +279,8 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
                 <Grid item xs={7} sm={3} md={3}>
                   <Button
                     onClick={onClose}
-                    variant="outlined"
+                    variant="contained"
                     size="medium"
-                    sx={{
-                      backgroundColor: '#263dad',
-                      //color: 'black',
-                      '&:hover': {
-                        backgroundColor: '#263dad',
-                        opacity: 0.8
-                      }
-                    }}
                     style={{ marginTop: 5 }}>
                     Annuler
                   </Button>
@@ -305,13 +289,6 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
             </Grid>
           </Grid>
         </Grid>
-        {/* <Box>
-
-
-          <Button variant="contained" size="medium" onClick={handleAddDetail}>
-            Ajouter
-          </Button>
-        </Box> */}
       </DialogContent>
     </Dialog>
   );
