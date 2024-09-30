@@ -16,8 +16,30 @@ import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
 import { useClientsQuery } from 'api/clients/hooks';
 import RootContainer from '../RootContainer';
+import { createStyles, makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    buttonWrapper: {
+      paddingLeft: 2,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      width: '50%'
+    },
+    body: {
+      flex: 1,
+      borderRadius: 5,
+      height: '80%',
+      padding: 2,
+      display: 'flex'
+    }
+  })
+);
 
 const Clients: React.FC = () => {
+  const classes = useStyles();
+
   const queryClient = useQueryClient();
   const { currentCity } = useSelectedData();
 
@@ -54,28 +76,12 @@ const Clients: React.FC = () => {
   }
   return (
     <RootContainer title={'Clients'}>
-      <Box
-        sx={{
-          paddingLeft: 2,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          width: '50%'
-        }}>
+      <Box className={classes.buttonWrapper}>
         <Button variant="contained" onClick={() => setIsOpened(true)}>
           Nouveau client
         </Button>
       </Box>
-      <Box
-        sx={{
-          flex: 1,
-          borderRadius: 5,
-          //marginTop: 2,
-          height: '80%',
-          padding: 2,
-          display: 'flex'
-          //paddingLeft: 5
-        }}>
+      <Box className={classes.body}>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">

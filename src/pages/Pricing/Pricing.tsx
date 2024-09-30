@@ -10,8 +10,22 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { usePricingsQuery } from 'api/pricings/hooks';
 import RootContainer from '../RootContainer';
+import { createStyles, makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    buttonWrapper: {
+      paddingLeft: 2,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      width: '50%'
+    }
+  })
+);
 
 const Pricing: React.FC = () => {
+  const classes = useStyles();
   const { currentMarket } = useSelectedData();
 
   const { data: pricings = [] } = usePricingsQuery(currentMarket);
@@ -21,16 +35,7 @@ const Pricing: React.FC = () => {
   }
   return (
     <RootContainer title={'Tarifs'}>
-      <Box
-        sx={{
-          flex: 1,
-          borderRadius: 5,
-          //marginTop: 2,
-          height: '80%',
-          padding: 2,
-          display: 'flex'
-          //paddingLeft: 5
-        }}>
+      <Box className={classes.buttonWrapper}>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">

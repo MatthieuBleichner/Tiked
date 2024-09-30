@@ -15,8 +15,29 @@ import Button from '@mui/material/Button';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
 import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
 import RootContainer from '../RootContainer';
+import { createStyles, makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    buttonWrapper: {
+      paddingLeft: 2,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      width: '50%'
+    },
+    body: {
+      flex: 1,
+      borderRadius: 5,
+      height: '80%',
+      padding: 2,
+      display: 'flex'
+    }
+  })
+);
 
 const BalanceSheets: React.FC = () => {
+  const classes = useStyles();
   const queryClient = useQueryClient();
   const { currentMarket } = useSelectedData();
 
@@ -37,27 +58,12 @@ const BalanceSheets: React.FC = () => {
 
   return (
     <RootContainer title={'Bilans'}>
-      <Box
-        sx={{
-          paddingLeft: 2,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          width: '50%'
-        }}>
+      <Box className={classes.buttonWrapper}>
         <Button variant="contained" onClick={() => setCreationModeIsOpened(true)}>
           Nouveau Bilan
         </Button>
       </Box>
-      <Box
-        sx={{
-          flex: 1,
-          borderRadius: 5,
-          //marginTop: 2,
-          height: '80%',
-          padding: 2
-          //paddingLeft: 5
-        }}>
+      <Box className={classes.body}>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
