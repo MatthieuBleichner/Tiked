@@ -7,7 +7,6 @@ import Button from '@mui/material//Button';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material//Typography';
 import TextField from '@mui/material//TextField';
-// import Icon from '@mui/material//Icon';
 import { grey } from '@mui/material//colors';
 import { createStyles, makeStyles } from '@mui/styles';
 import { useTheme } from '@mui/material/styles';
@@ -66,8 +65,6 @@ function CityModal(props: CityModalProps) {
     if (
       cityRef?.current?.value === null ||
       cityRef?.current?.value === undefined ||
-      // urlRef?.current?.value === null ||
-      // urlRef?.current?.value === undefined ||
       postalCodeRef?.current?.value === null ||
       postalCodeRef?.current?.value === undefined
     )
@@ -80,7 +77,7 @@ function CityModal(props: CityModalProps) {
   };
 
   return (
-    <Dialog className={classes.root} /*maxWidth="md"*/ open={open} onClose={() => onClose()}>
+    <Dialog className={classes.root} open={open} onClose={() => onClose()}>
       <DialogContent className={classes.padding}>
         <Grid container>
           <Grid item xs={12}>
@@ -91,14 +88,7 @@ function CityModal(props: CityModalProps) {
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <IconButton
-                  edge="end"
-                  //align="right"
-                  color="inherit"
-                  aria-label="Close"
-                  //style={{ padding: 8 }}
-                  //className={classes.padding}
-                  onClick={onClose}>
+                <IconButton edge="end" color="inherit" aria-label="Close" onClick={onClose}>
                   <CloseIcon />
                 </IconButton>
               </Grid>
@@ -134,7 +124,7 @@ function CityModal(props: CityModalProps) {
                   inputRef={urlRef}
                 />
               </Grid>
-              <Grid item container /*ju*/>
+              <Grid item container>
                 <Grid item xs={7} sm={3} md={3}>
                   <Button
                     variant="contained"

@@ -1,6 +1,5 @@
 import Dialog from '@mui/material//Dialog';
 import DialogContent from '@mui/material//DialogContent';
-// import Icon from '@mui/material//Icon';
 import { grey } from '@mui/material//colors';
 import { createStyles, makeStyles } from '@mui/styles';
 import { v6 as uuid } from 'uuid';
@@ -46,13 +45,6 @@ const useStyles = makeStyles(() =>
     root: {
       flexGrow: 1
     },
-    // primaryColor: {
-    //   color: '#3333FF'
-    // },
-    // secondaryColor: {
-    //   color: grey[700]
-    // },
-
     padding: {
       padding: 0
     },
@@ -130,13 +122,8 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
         .then(response => response.json())
         .then(response => formatResponse(response));
     },
-    onSuccess: (data, variables) => {
+    onSuccess: data => {
       onAddDetail(data as IBalanceSheetDetails[]);
-      //   queryClient.setQueryData(
-      //     ['details', balanceSheet?.id],
-      //     [...details, ...(data as IBalanceSheetDetails[])]
-      //   );
-      console.log('Dans le onSuccess, data :', data, 'variables :', variables);
     },
     onError: error => {
       console.error('Error adding balance sheet details:', error);
@@ -157,7 +144,7 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
   };
 
   return (
-    <Dialog className={classes.root} /*maxWidth="md"*/ open={open} onClose={() => onClose()}>
+    <Dialog className={classes.root} open={open} onClose={() => onClose()}>
       <DialogContent className={classes.padding}>
         <Grid container>
           <Grid item xs={12}>
@@ -182,14 +169,6 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
             </Grid>
             <Grid container direction="row" className={classes.mainContent}>
               <Grid item xs={7}>
-                {/* <TextField
-                  fullWidth
-                  margin="dense"
-                  variant="outlined"
-                  label="Prénom"
-                  id="prenom"
-                  //inputRef={firstNameRef}
-                /> */}
                 <FormControl>
                   <InputLabel
                     id="ville-select-label"
@@ -254,19 +233,15 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
                   disabled
                   id="outlined-number"
                   label="Prix €"
-                  //type="number"
                   variant="outlined"
                   value={total}
                   sx={{
-                    // '& .MuiInputBase-input.Mui-disabled': {
-                    //   WebkitTextFillColor: '#000000'
-                    // },
                     marginLeft: 2,
                     width: 100
                   }}
                 />
               </Grid>
-              <Grid item container /*ju*/ sx={{ marginTop: 2 }}>
+              <Grid item container sx={{ marginTop: 2 }}>
                 <Grid item xs={7} sm={3} md={3}>
                   <Button
                     variant="contained"

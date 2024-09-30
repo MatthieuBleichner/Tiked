@@ -79,13 +79,8 @@ const DetailsCreation = ({ balanceSheet, onAddDetail }: DetailCreationProps) => 
         .then(response => response.json())
         .then(response => formatResponse(response));
     },
-    onSuccess: (data, variables) => {
+    onSuccess: data => {
       onAddDetail(data as IBalanceSheetDetails[]);
-      //   queryClient.setQueryData(
-      //     ['details', balanceSheet?.id],
-      //     [...details, ...(data as IBalanceSheetDetails[])]
-      //   );
-      console.log('Dans le onSuccess, data :', data, 'variables :', variables);
     },
     onError: error => {
       console.error('Error adding balance sheet details:', error);

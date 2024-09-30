@@ -104,7 +104,7 @@ const VerticalDrawer = () => {
       <DrawerHeader />
       <Divider />
       <List>
-        {['CLIENTS', 'TARIFS' /*, 'FACTURATION'*/, 'BILAN'].map(text => (
+        {['CLIENTS', 'TARIFS', 'BILAN'].map(text => (
           <ListItem key={text} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               component={Link}

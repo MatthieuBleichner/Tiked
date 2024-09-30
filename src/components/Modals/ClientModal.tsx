@@ -7,7 +7,6 @@ import Button from '@mui/material//Button';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material//Typography';
 import TextField from '@mui/material//TextField';
-// import Icon from '@mui/material//Icon';
 import { grey } from '@mui/material//colors';
 import { createStyles, makeStyles } from '@mui/styles';
 import { useTheme } from '@mui/material/styles';
@@ -57,8 +56,6 @@ function ClientModal(props: ClientModalProps) {
   const classes = useStyles();
   const { open, onClose, onClientCreated, city } = props;
 
-  const theme = useTheme();
-
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const sirenRef = useRef<HTMLInputElement>(null);
@@ -90,7 +87,7 @@ function ClientModal(props: ClientModalProps) {
   };
 
   return (
-    <Dialog className={classes.root} /*maxWidth="md"*/ open={open} onClose={() => onClose()}>
+    <Dialog className={classes.root} open={open} onClose={() => onClose()}>
       <DialogContent className={classes.padding}>
         <Grid container>
           <Grid item xs={12}>
@@ -136,7 +133,6 @@ function ClientModal(props: ClientModalProps) {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  //fullWidth
                   margin="dense"
                   variant="outlined"
                   label="numéro de siren"
@@ -144,7 +140,7 @@ function ClientModal(props: ClientModalProps) {
                   inputRef={sirenRef}
                 />
               </Grid>
-              <Grid item container /*ju*/>
+              <Grid item container>
                 <Grid item xs={7} sm={3} md={3}>
                   <Button
                     variant="contained"

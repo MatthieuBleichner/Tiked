@@ -1,6 +1,5 @@
 import Dialog from '@mui/material//Dialog';
 import DialogContent from '@mui/material//DialogContent';
-// import Icon from '@mui/material//Icon';
 import { grey } from '@mui/material//colors';
 import { createStyles, makeStyles } from '@mui/styles';
 import { v6 as uuid } from 'uuid';
@@ -24,13 +23,6 @@ const useStyles = makeStyles(() =>
     root: {
       flexGrow: 1
     },
-    // primaryColor: {
-    //   color: '#3333FF'
-    // },
-    // secondaryColor: {
-    //   color: grey[700]
-    // },
-
     padding: {
       padding: 0
     },
@@ -118,7 +110,7 @@ const BalanceSheetCreationModal: React.FC<BalanceSheetCreationModalProps> = ({
   };
 
   return (
-    <Dialog className={classes.root} /*maxWidth="md"*/ open={open} onClose={() => onClose()}>
+    <Dialog className={classes.root} open={open} onClose={() => onClose()}>
       <DialogContent className={classes.padding}>
         <Grid container>
           <Grid item xs={12}>
@@ -165,7 +157,7 @@ const BalanceSheetCreationModal: React.FC<BalanceSheetCreationModalProps> = ({
                   />
                 </LocalizationProvider>
               </Grid>
-              <Grid item container /*ju*/ sx={{ marginTop: 2 }}>
+              <Grid item container sx={{ marginTop: 2 }}>
                 <Grid item xs={7} sm={3} md={3}>
                   <Button
                     variant="contained"

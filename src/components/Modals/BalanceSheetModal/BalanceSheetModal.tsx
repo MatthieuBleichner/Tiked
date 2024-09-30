@@ -27,21 +27,6 @@ import BalanceSheetDetailsModal from '../BalanceSheetDetailsModal';
 import { useClientsQuery } from 'api/clients/hooks';
 import { useBalanceSheetDetailsQuery } from 'api/balanceSheetDetails/hooks';
 
-const styles = {
-  btn: {
-    borderRadius: '3px',
-    border: '1px solid gray',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '2px',
-    padding: '3px',
-    fontSize: '11px',
-    color: '#4f4f4f',
-    fontWeight: 600,
-    cursor: 'pointer'
-  }
-};
-
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
@@ -164,7 +149,6 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
             <Button variant="contained" onClick={() => setOpenModal(true)}>
               Nouvelle entrée
             </Button>
-            {/* <DetailsCreation balanceSheet={balanceSheet} onAddDetail={onAddDetail} /> */}
           </Box>
         )}
         <Box
