@@ -44,10 +44,13 @@ interface BalanceSheetModalProps {
 export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSheetModalProps) => {
   const { currentCity, currentMarket } = useSelectedData();
 
-  const { data: clients = [] } = useClientsQuery(currentCity);
+  const { data: clients = [] } = useClientsQuery(currentCity, ['clients', currentCity?.id || '']);
 
   const queryClient = useQueryClient();
-  const { data: details = [] } = useBalanceSheetDetailsQuery(balanceSheet);
+  const { data: details = [] } = useBalanceSheetDetailsQuery(balanceSheet, [
+    'details',
+    balanceSheet?.id || ''
+  ]);
 
   const onAddDetail = (detail: IBalanceSheetDetails[]) => {
     queryClient.setQueryData(['details', balanceSheet?.id], [...details, ...detail]);

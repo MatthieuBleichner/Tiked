@@ -13,10 +13,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 
 import { IBalanceSheet } from 'types/types';
-import { config } from 'config';
-import { useMutation } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
-import { formatResponse, formatQueryData } from 'api/utils';
+import { useBalanceSheetMutation } from 'api/balanceSheets/hooks';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -43,23 +41,6 @@ const useStyles = makeStyles(() =>
   })
 );
 
-interface IBalanceSheetResponse {
-  id: string;
-  marketId: string;
-  date: string;
-}
-const buildBalanceSheet: (arg0: string, arg1: string, arg2: string) => IBalanceSheet = (
-  id,
-  marketId,
-  date
-) => {
-  return {
-    id: id,
-    date: new Date(date),
-    marketId: marketId
-  };
-};
-
 interface BalanceSheetCreationModalProps {
   open: boolean;
   onClose: () => void;
@@ -74,30 +55,7 @@ const BalanceSheetCreationModal: React.FC<BalanceSheetCreationModalProps> = ({
   const classes = useStyles();
   const { currentMarket } = useSelectedData();
   const [date, setDate] = useState<Dayjs>();
-  const mutation = useMutation({
-    mutationFn: (newSheet: IBalanceSheet) => {
-      const formatedSheet = formatQueryData(newSheet);
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formatQueryData(formatedSheet))
-      };
-      return fetch(`${config.API_URL}balanceSheet?`, requestOptions)
-        .then(response => response.json())
-        .then(response => {
-          return (formatResponse(response) as IBalanceSheetResponse[]).map(
-            (sheet: { id: string; marketId: string; date: string }) =>
-              buildBalanceSheet(sheet.id, sheet.marketId, sheet.date)
-          ) as IBalanceSheet[];
-        });
-    },
-    onSuccess: data => {
-      onAddSheeet(data as IBalanceSheet[]);
-    },
-    onError: error => {
-      console.error('Error adding sheet:', error);
-    }
-  });
+  const mutation = useBalanceSheetMutation({ onSuccess: data => onAddSheeet(data) });
 
   const handleAddDetail = () => {
     currentMarket &&

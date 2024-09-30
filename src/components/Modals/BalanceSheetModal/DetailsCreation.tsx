@@ -13,13 +13,11 @@ import React, { useState } from 'react';
 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { IBalanceSheetDetails, IBalanceSheet } from 'types/types';
-import { config } from 'config';
-import { useMutation } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
-import { formatResponse, formatQueryData } from 'api/utils';
 import { v6 as uuid } from 'uuid';
 import { usePricingsQuery } from 'api/pricings/hooks';
 import { useClientsQuery } from 'api/clients/hooks';
+import { useBalanceSheetDetailsMutation } from 'api/balanceSheetDetails/hooks';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -47,7 +45,7 @@ const DetailsCreation = ({ balanceSheet, onAddDetail }: DetailCreationProps) => 
     setSelectedClientId(event.target.value);
   };
 
-  const { data: clients = [] } = useClientsQuery(currentCity);
+  const { data: clients = [] } = useClientsQuery(currentCity, ['clients', currentCity?.id || '']);
 
   const [selectedPricingsIds, setSelectedPricingsIds] = React.useState<string[]>([]);
 
@@ -67,25 +65,7 @@ const DetailsCreation = ({ balanceSheet, onAddDetail }: DetailCreationProps) => 
     return acc + (pricing?.price || 0);
   }, 0);
 
-  const mutation = useMutation({
-    mutationFn: (newBalanceSheetDetail: IBalanceSheetDetails) => {
-      console.log('mutationFn', newBalanceSheetDetail);
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formatQueryData(newBalanceSheetDetail))
-      };
-      return fetch(`${config.API_URL}balanceSheetDetail?`, requestOptions)
-        .then(response => response.json())
-        .then(response => formatResponse(response));
-    },
-    onSuccess: data => {
-      onAddDetail(data as IBalanceSheetDetails[]);
-    },
-    onError: error => {
-      console.error('Error adding balance sheet details:', error);
-    }
-  });
+  const mutation = useBalanceSheetDetailsMutation({ onSuccess: data => onAddDetail(data) });
 
   const handleAddDetail = () => {
     selectedClientId &&

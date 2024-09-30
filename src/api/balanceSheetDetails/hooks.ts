@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { config } from 'config';
-import { formatResponse } from '../utils';
+import { formatResponse, formatQueryData } from '../utils';
 
 import { IBalanceSheet, IBalanceSheetDetails } from 'types/types';
 
@@ -14,9 +14,12 @@ const fetchBalanceSheetDetails: (
   }
 };
 
-export const useBalanceSheetDetailsQuery = (balanceSheet: IBalanceSheet | undefined) => {
+export const useBalanceSheetDetailsQuery = (
+  balanceSheet: IBalanceSheet | undefined,
+  queryKey: string[]
+) => {
   return useQuery<IBalanceSheetDetails[]>({
-    queryKey: ['details', balanceSheet?.id],
+    queryKey: queryKey,
     queryFn: () =>
       fetchBalanceSheetDetails(balanceSheet)
         .then(res => res.json())
@@ -24,5 +27,34 @@ export const useBalanceSheetDetailsQuery = (balanceSheet: IBalanceSheet | undefi
           return formatResponse(res) as IBalanceSheetDetails[];
         }),
     enabled: !!balanceSheet
+  });
+};
+
+interface useBalanceSheetDetailsMutationParams {
+  onSuccess?: (arg0: IBalanceSheetDetails[]) => void;
+  onError?: (arg0: Error) => void;
+}
+export const useBalanceSheetDetailsMutation = ({
+  onSuccess,
+  onError
+}: useBalanceSheetDetailsMutationParams) => {
+  return useMutation({
+    mutationFn: (newBalanceSheetDetail: IBalanceSheetDetails) => {
+      console.log('mutationFn', newBalanceSheetDetail);
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formatQueryData(newBalanceSheetDetail))
+      };
+      return fetch(`${config.API_URL}balanceSheetDetail?`, requestOptions)
+        .then(response => response.json())
+        .then(response => formatResponse(response));
+    },
+    onSuccess: data => {
+      onSuccess?.(data as IBalanceSheetDetails[]);
+    },
+    onError: error => {
+      onError?.(error);
+    }
   });
 };

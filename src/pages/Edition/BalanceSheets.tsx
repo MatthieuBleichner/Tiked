@@ -41,7 +41,10 @@ const BalanceSheets: React.FC = () => {
   const queryClient = useQueryClient();
   const { currentMarket } = useSelectedData();
 
-  const { data: sheets = [] } = useBalanceSheetsDetailsQuery(currentMarket);
+  const { data: sheets = [] } = useBalanceSheetsDetailsQuery(currentMarket, [
+    'sheets',
+    currentMarket?.id || ''
+  ]);
 
   const [selectedSheet, setSelectedSheet] = React.useState<IBalanceSheet | undefined | null>();
   const handleOpen = (e: React.MouseEvent<HTMLTableCellElement>) => {

@@ -14,7 +14,7 @@ import ClientModal from 'components/Modals/ClientModal';
 import Button from '@mui/material/Button';
 import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
-import { useClientsQuery } from 'api/clients/hooks';
+import { useClientsQuery, useClientMutation } from 'api/clients/hooks';
 import RootContainer from '../RootContainer';
 import { createStyles, makeStyles } from '@mui/styles';
 
@@ -43,9 +43,15 @@ const Clients: React.FC = () => {
   const queryClient = useQueryClient();
   const { currentCity } = useSelectedData();
 
-  const { data: clients = [] } = useClientsQuery(currentCity);
+  const { data: clients = [] } = useClientsQuery(currentCity, ['clients', currentCity?.id || '']);
 
-  const mutation = useMutation({
+  const onAddClients = (newClients: IClient[]) =>
+    queryClient.setQueryData(['clients', currentCity?.id], [...clients, ...newClients]);
+  const mutation = useClientMutation({
+    onSuccess: data => onAddClients(data)
+  });
+
+  useMutation({
     mutationFn: (newClient: IClient) => {
       const requestOptions = {
         method: 'POST',
