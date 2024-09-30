@@ -18,14 +18,15 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { IBalanceSheetDetails, IBalanceSheet, ICity, IClient } from 'types/types';
-import { config } from 'config';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { formatResponse } from 'api/utils';
+import { IBalanceSheetDetails, IBalanceSheet } from 'types/types';
+import { useQueryClient } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
 import BalanceSheetDetailsPDF from '../../PDF/BalanceSheetDetailsPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import BalanceSheetDetailsModal from '../BalanceSheetDetailsModal';
+import { useClientsQuery } from 'api/clients/hooks';
+import { useBalanceSheetDetailsQuery } from 'api/balanceSheetDetails/hooks';
+
 const styles = {
   btn: {
     borderRadius: '3px',
@@ -50,20 +51,6 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const fetchBalanceSheetDetails: (
-  arg0: IBalanceSheet | undefined | null
-) => Promise<Response> = async balanceSheet => {
-  if (balanceSheet) {
-    return fetch(`${config.API_URL}balanceSheetDetails?balanceSheetId=${balanceSheet?.id}`);
-  } else {
-    return Promise.resolve(new Response());
-  }
-};
-
-const fetchClients: (arg0: ICity | undefined) => Promise<Response> = async currentCity => {
-  return fetch(`${config.API_URL}clients?cityId=${currentCity?.id}`);
-};
-
 interface BalanceSheetModalProps {
   open: boolean;
   handleClose: () => void;
@@ -72,31 +59,12 @@ interface BalanceSheetModalProps {
 export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSheetModalProps) => {
   const { currentCity, currentMarket } = useSelectedData();
 
-  const { data: clients = [] } = useQuery<IClient[]>({
-    queryKey: ['clients', currentCity?.id],
-    queryFn: () =>
-      fetchClients(currentCity)
-        .then(res => res.json())
-        .then(res => {
-          return formatResponse(res) as IClient[];
-        }),
-    enabled: !!currentCity?.id
-  });
+  const { data: clients = [] } = useClientsQuery(currentCity);
 
   const queryClient = useQueryClient();
-  const { data: details = [] } = useQuery<IBalanceSheetDetails[]>({
-    queryKey: ['details', balanceSheet?.id],
-    queryFn: () =>
-      fetchBalanceSheetDetails(balanceSheet)
-        .then(res => res.json())
-        .then(res => {
-          return formatResponse(res) as IBalanceSheetDetails[];
-        }),
-    enabled: !!balanceSheet
-  });
+  const { data: details = [] } = useBalanceSheetDetailsQuery(balanceSheet);
 
   const onAddDetail = (detail: IBalanceSheetDetails[]) => {
-    console.log('detail', detail);
     queryClient.setQueryData(['details', balanceSheet?.id], [...details, ...detail]);
   };
 
@@ -105,7 +73,6 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
 
   const onEditButtonPress = () => setInEditMode(!inEditMode);
 
-  console.log('details', details);
   return (
     <React.Fragment>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>

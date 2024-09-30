@@ -1,7 +1,5 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import { useQuery } from '@tanstack/react-query';
-import { IMarket, IPricing } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,32 +10,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
-import { formatResponse } from 'api/utils';
-import { config } from 'config';
-
-/**
- * Fetch clients from the API
- * @param currentCity - The current city
- * @returns The clients
- */
-const fetchPricings: (arg0: IMarket | undefined) => Promise<Response> = async currentMarket => {
-  return fetch(`${config.API_URL}pricings?marketId=${currentMarket?.id}`);
-};
+import { usePricingsQuery } from 'api/pricings/hooks';
 
 const Pricing: React.FC = () => {
   const { currentMarket } = useSelectedData();
-  //const [clients, setClients] = useState<IClient[]>([]);
 
-  const { data: pricings = [] } = useQuery<IPricing[]>({
-    queryKey: ['pricing', currentMarket?.id],
-    queryFn: () =>
-      fetchPricings(currentMarket)
-        .then(res => res.json())
-        .then(res => {
-          return formatResponse(res) as IPricing[];
-        }),
-    enabled: !!currentMarket?.id
-  });
+  const { data: pricings = [] } = usePricingsQuery(currentMarket);
 
   if (!currentMarket) {
     return null;

@@ -5,7 +5,6 @@ import { grey } from '@mui/material//colors';
 import { createStyles, makeStyles } from '@mui/styles';
 import { v6 as uuid } from 'uuid';
 import {
-  Box,
   FormControl,
   InputLabel,
   MenuItem,
@@ -23,26 +22,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import {
-  IBalanceSheetDetails,
-  IBalanceSheet,
-  ICity,
-  IClient,
-  IMarket,
-  IPricing
-} from 'types/types';
+import { IBalanceSheetDetails, IBalanceSheet } from 'types/types';
 import { config } from 'config';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
 import { formatResponse, formatQueryData } from 'api/utils';
-
-const fetchClients: (arg0: ICity | undefined) => Promise<Response> = async currentCity => {
-  return fetch(`${config.API_URL}clients?cityId=${currentCity?.id}`);
-};
-
-const fetchPricings: (arg0: IMarket | undefined) => Promise<Response> = async currentMarket => {
-  return fetch(`${config.API_URL}pricings?marketId=${currentMarket?.id}`);
-};
+import { useClientsQuery } from 'api/clients/hooks';
+import { usePricingsQuery } from 'api/pricings/hooks';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -104,26 +90,14 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
   const [selectedClientId, setSelectedClientId] = useState<string>();
 
   const { currentCity, currentMarket } = useSelectedData();
-  const { data: pricings = [] } = useQuery<IPricing[]>({
-    queryKey: ['pricings', currentMarket?.id],
-    queryFn: () => fetchPricings(currentMarket).then(res => res.json()),
-    enabled: !!currentMarket?.id
-  });
+  const { data: pricings = [] } = usePricingsQuery(currentMarket);
 
   const handleClientChange = (event: SelectChangeEvent) => {
     setSelectedClientId(event.target.value);
   };
 
-  const { data: clients = [] } = useQuery<IClient[]>({
-    queryKey: ['clients', currentCity?.id],
-    queryFn: () =>
-      fetchClients(currentCity)
-        .then(res => res.json())
-        .then(res => {
-          res.length && setSelectedClientId(res[0].id);
-          return formatResponse(res) as IClient[];
-        }),
-    enabled: !!currentCity?.id
+  const { data: clients = [] } = useClientsQuery(currentCity, res => {
+    res.length && setSelectedClientId(res[0].id);
   });
 
   const [selectedPricingsIds, setSelectedPricingsIds] = React.useState<string[]>([]);

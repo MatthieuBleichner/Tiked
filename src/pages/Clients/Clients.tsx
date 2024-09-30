@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { IClient, ICity } from 'types/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { IClient } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,31 +16,13 @@ import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
 import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
-
-/**
- * Fetch clients from the API
- * @param currentCity - The current city
- * @returns The clients
- */
-const fetchClients: (arg0: ICity | undefined) => Promise<Response> = async currentCity => {
-  return fetch(`${config.API_URL}clients?cityId=${currentCity?.id}`);
-};
+import { useClientsQuery } from 'api/clients/hooks';
 
 const Clients: React.FC = () => {
   const queryClient = useQueryClient();
   const { currentCity } = useSelectedData();
-  //const [clients, setClients] = useState<IClient[]>([]);
 
-  const { data: clients = [] } = useQuery<IClient[]>({
-    queryKey: ['clients', currentCity?.id],
-    queryFn: () =>
-      fetchClients(currentCity)
-        .then(res => res.json())
-        .then(res => {
-          return formatResponse(res) as IClient[];
-        }),
-    enabled: !!currentCity?.id
-  });
+  const { data: clients = [] } = useClientsQuery(currentCity);
 
   const mutation = useMutation({
     mutationFn: (newClient: IClient) => {

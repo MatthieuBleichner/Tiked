@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { IBalanceSheet, IMarket } from 'types/types';
+import { useQueryClient } from '@tanstack/react-query';
+import { IBalanceSheet } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,57 +12,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
-import { formatResponse } from 'api/utils';
-import { config } from 'config';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
 import Button from '@mui/material/Button';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
-
-interface IBalanceSheetResponse {
-  id: string;
-  marketId: string;
-  date: string;
-}
-const buildBalanceSheet: (arg0: string, arg1: string, arg2: string) => IBalanceSheet = (
-  id,
-  marketId,
-  date
-) => {
-  return {
-    id: id,
-    date: new Date(date),
-    marketId: marketId
-  };
-};
-
-/**
- * Fetch clients from the API
- * @param currentCity - The current city
- * @returns The clients
- */
-const fetchBalanceSheets: (
-  arg0: IMarket | undefined
-) => Promise<Response> = async currentMarket => {
-  return fetch(`${config.API_URL}balanceSheets?marketId=${currentMarket?.id}`);
-};
+import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
 
 const BalanceSheets: React.FC = () => {
   const queryClient = useQueryClient();
   const { currentMarket } = useSelectedData();
 
-  const { data: sheets = [] } = useQuery<IBalanceSheet[]>({
-    queryKey: ['sheets', currentMarket?.id],
-    queryFn: () =>
-      fetchBalanceSheets(currentMarket)
-        .then(res => res.json())
-        .then(res => {
-          return (formatResponse(res) as IBalanceSheetResponse[]).map(
-            (sheet: { id: string; marketId: string; date: string }) =>
-              buildBalanceSheet(sheet.id, sheet.marketId, sheet.date)
-          ) as IBalanceSheet[];
-        }),
-    enabled: !!currentMarket?.id
-  });
+  const { data: sheets = [] } = useBalanceSheetsDetailsQuery(currentMarket);
 
   const [selectedSheet, setSelectedSheet] = React.useState<IBalanceSheet | undefined | null>();
   const handleOpen = (e: React.MouseEvent<HTMLTableCellElement>) => {

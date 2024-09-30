@@ -6,29 +6,14 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { ICity, IMarket } from 'types/types';
-import { useQuery } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
-import { formatResponse } from 'api/utils';
-import { config } from 'config';
-
-const fetchMarkets: (arg0: string | undefined) => Promise<Response> = async cityId => {
-  return fetch(`${config.API_URL}markets?cityId=${cityId}`);
-};
-
-const fetchCities: () => Promise<Response> = () => {
-  return fetch(`${config.API_URL}cities`);
-};
+import { useCitiesQuery } from 'api/cities/hooks';
+import { useMarketsQuery } from 'api/markets/hooks';
 
 function CitiesAndMarketsHorizontalPanel(): JSX.Element {
   const { setCurrentMarket, setCurrentCity } = useSelectedData();
 
-  const { data: cities } = useQuery<ICity[]>({
-    queryKey: ['repoData'],
-    queryFn: () =>
-      fetchCities()
-        .then(res => res.json())
-        .then(data => formatResponse(data) as ICity[])
-  });
+  const { data: cities } = useCitiesQuery();
 
   const [selectedCity, setSelectedCity] = useState<ICity>();
   useEffect(() => {
@@ -38,16 +23,9 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
     }
   }, [cities]);
 
-  const { data: markets } = useQuery<IMarket[]>({
-    queryKey: ['repoMarkets', selectedCity?.id],
-    queryFn: () =>
-      fetchMarkets(selectedCity?.id).then(res =>
-        res.json().then(data => formatResponse(data) as IMarket[])
-      ),
-    enabled: !!selectedCity?.id
-  });
+  const { data: markets } = useMarketsQuery(selectedCity);
 
-  const [selectedMarket, setSelectedMarket] = useState<ICity>();
+  const [selectedMarket, setSelectedMarket] = useState<IMarket>();
   useEffect(() => {
     if (markets?.length) {
       setCurrentMarket(markets[0]);
