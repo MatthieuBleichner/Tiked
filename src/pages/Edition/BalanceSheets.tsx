@@ -10,12 +10,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import { grey } from '@mui/material/colors';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
 import Button from '@mui/material/Button';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
 import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
+import RootContainer from '../RootContainer';
 
 const BalanceSheets: React.FC = () => {
   const queryClient = useQueryClient();
@@ -37,28 +36,7 @@ const BalanceSheets: React.FC = () => {
   }
 
   return (
-    <Box
-      sx={{
-        flex: 1,
-        borderRadius: 5,
-        //marginTop: 2,
-        height: '80%',
-        backgroundColor: grey[50],
-        padding: 2
-        //paddingLeft: 5
-      }}>
-      <Box
-        sx={{
-          display: 'flex',
-          direction: 'row',
-          padding: 2,
-          flex: 1,
-          justifyContent: 'flex-start'
-        }}>
-        <Typography variant="h4" noWrap component="div">
-          Facturation
-        </Typography>
-      </Box>
+    <RootContainer title={'Bilans'}>
       <Box
         sx={{
           paddingLeft: 2,
@@ -127,7 +105,7 @@ const BalanceSheets: React.FC = () => {
           queryClient.setQueryData(['sheets', currentMarket?.id], [...sheets, ...data]);
         }}
       />
-    </Box>
+    </RootContainer>
   );
 };
 

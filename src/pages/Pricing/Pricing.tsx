@@ -8,9 +8,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import { grey } from '@mui/material/colors';
 import { usePricingsQuery } from 'api/pricings/hooks';
+import RootContainer from '../RootContainer';
 
 const Pricing: React.FC = () => {
   const { currentMarket } = useSelectedData();
@@ -21,26 +20,7 @@ const Pricing: React.FC = () => {
     return null;
   }
   return (
-    <Box
-      sx={{
-        flex: 1,
-        borderRadius: 5,
-        height: '80%',
-        backgroundColor: grey[50],
-        padding: 2
-      }}>
-      <Box
-        sx={{
-          display: 'flex',
-          direction: 'row',
-          padding: 2,
-          flex: 1,
-          justifyContent: 'flex-start'
-        }}>
-        <Typography variant="h4" noWrap component="div">
-          Tarifs
-        </Typography>
-      </Box>
+    <RootContainer title={'Tarifs'}>
       <Box
         sx={{
           flex: 1,
@@ -76,7 +56,7 @@ const Pricing: React.FC = () => {
           </TableContainer>
         </Box>
       </Box>
-    </Box>
+    </RootContainer>
   );
 };
 
