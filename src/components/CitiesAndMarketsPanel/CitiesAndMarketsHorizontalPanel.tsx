@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { grey } from '@mui/material/colors';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -9,6 +8,7 @@ import { ICity, IMarket } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import { useCitiesQuery } from 'api/cities/hooks';
 import { useMarketsQuery } from 'api/markets/hooks';
+import styles from './styles';
 
 function CitiesAndMarketsHorizontalPanel(): JSX.Element {
   const { setCurrentMarket, setCurrentCity } = useSelectedData();
@@ -50,43 +50,16 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
   };
 
   return (
-    <Box
-      sx={{
-        bgcolor: grey[50],
-        paddingLeft: 2,
-        display: 'flex',
-        justifyContent: { xs: 'center', md: 'flex-start' },
-        alignItems: { xs: 'flex-start', md: 'center' },
-        borderRadius: 5,
-        zIndex: 10,
-        height: '100%',
-        flexDirection: { xs: 'column', md: 'row' }
-      }}>
+    <Box sx={styles.container}>
       <FormControl size="small">
-        <InputLabel
-          id="ville-select-label"
-          sx={{
-            color: '#2e2e2e',
-            '&.Mui-focused': {
-              color: '#000'
-            }
-          }}>
-          Ville
-        </InputLabel>
+        <InputLabel id="ville-select-label">Ville</InputLabel>
         <Select
           labelId="ville-select-label"
           id="ville-select"
           value={selectedCity?.id || ''}
-          label="Age"
+          label="City"
           onChange={handleChange}
           sx={{
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'darkgray'
-            },
-            '& .MuiInputLabel-outlined': {
-              color: '#2e2e2e',
-              fontWeight: 'red'
-            },
             minWidth: 120
           }}>
           {cities !== undefined &&
@@ -104,17 +77,7 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
           maxWidth: { xs: '200px', md: '550px' }
         }}>
         <FormControl size="small">
-          <InputLabel
-            id="market-select-label"
-            sx={{
-              //paddingLeft: 2,
-              color: '#2e2e2e',
-              '&.Mui-focused': {
-                color: '#000'
-              }
-            }}>
-            Marché
-          </InputLabel>
+          <InputLabel id="market-select-label">Marché</InputLabel>
           <Select
             labelId="market-select-label"
             id="market-select"
@@ -122,13 +85,6 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
             label="Age"
             onChange={handleMarketChange}
             sx={{
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'darkgray'
-              },
-              '& .MuiInputLabel-outlined': {
-                color: '#2e2e2e',
-                fontWeight: 'red'
-              },
               minWidth: 120
             }}>
             {markets?.map(market => (
