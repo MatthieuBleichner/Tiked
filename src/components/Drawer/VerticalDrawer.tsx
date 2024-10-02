@@ -15,6 +15,7 @@ import AccountBalance from '@mui/icons-material/AccountBalance';
 import EditNote from '@mui/icons-material/EditNote';
 import { Link, useLocation } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 
 interface SectionIconsProps {
   title: string;
@@ -22,15 +23,15 @@ interface SectionIconsProps {
 
 const SectionIcon = (props: SectionIconsProps) => {
   const { title } = props;
-  if (title === 'CLIENTS') {
+  if (title === 'clients') {
     return <PeopleIcon />;
-  } else if (title === 'TARIFS') {
+  } else if (title === 'tarifs') {
     return <EuroIcon />;
   } else if (title === 'HISTORIQUE') {
     return <BarChart />;
   } else if (title === 'FACTURATION') {
     return <EditNote />;
-  } else if (title === 'BILAN') {
+  } else if (title === 'bilan') {
     return <AccountBalance />;
   } else {
     return <StorefrontIcon />;
@@ -99,12 +100,14 @@ const VerticalDrawer = () => {
   const isMobile = useMediaQuery(`(max-width: 760px)`);
   const open = !isMobile;
 
+  const { t } = useTranslation();
+
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader />
       <Divider />
       <List>
-        {['CLIENTS', 'TARIFS', 'BILAN'].map(text => (
+        {['clients', 'tarifs', 'bilan'].map(text => (
           <ListItem key={text} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               component={Link}
@@ -143,7 +146,7 @@ const VerticalDrawer = () => {
                 <SectionIcon title={text} />
               </ListItemIcon>
               <ListItemText
-                primary={text}
+                primary={t(`menu.${text}`)}
                 sx={[
                   open
                     ? {

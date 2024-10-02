@@ -1,0 +1,14 @@
+{
+    "menu.clients": "Clients",
+    "menu.tarifs": "Tarifs",
+    "menu.bilan": "Bilan",
+    "page.bilan.title": "Bilan",
+    "page.bilan.newBilan": "Nouveau bilan",
+    "page.clients.title": "Clients",
+    "page.clients.newClient": "Nouveau client",
+    "page.clients.table.header.firstName": "Prénom",
+    "page.clients.table.header.lastName": "Prénom",
+    "page.clients.table.header.siret": "Siret",
+    "page.pricings.title": "Tarifs"
+}
+

@@ -11,9 +11,11 @@ import Paper from '@mui/material/Paper';
 import { usePricingsQuery } from 'api/pricings/hooks';
 import RootContainer from '../RootContainer';
 import styles from './styles';
+import { useTranslation } from 'react-i18next';
 
 const Pricing: React.FC = () => {
   const { currentMarket } = useSelectedData();
+  const { t } = useTranslation();
 
   const { data: pricings = [] } = usePricingsQuery(currentMarket);
 
@@ -21,7 +23,7 @@ const Pricing: React.FC = () => {
     return null;
   }
   return (
-    <RootContainer title={'Tarifs'}>
+    <RootContainer title={t('page.pricings.title')}>
       <Box sx={styles.container}>
         <Box sx={styles.tableContainer}>
           <TableContainer component={Paper}>

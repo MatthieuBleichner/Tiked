@@ -16,6 +16,7 @@ import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationMod
 import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
 import RootContainer from '../RootContainer';
 import { createStyles, makeStyles } from '@mui/styles';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -40,6 +41,7 @@ const BalanceSheets: React.FC = () => {
   const classes = useStyles();
   const queryClient = useQueryClient();
   const { currentMarket } = useSelectedData();
+  const { t } = useTranslation();
 
   const { data: sheets = [] } = useBalanceSheetsDetailsQuery(currentMarket, [
     'sheets',
@@ -60,10 +62,10 @@ const BalanceSheets: React.FC = () => {
   }
 
   return (
-    <RootContainer title={'Bilans'}>
+    <RootContainer title={t('page.bilan.title')}>
       <Box className={classes.buttonWrapper}>
         <Button variant="contained" onClick={() => setCreationModeIsOpened(true)}>
-          Nouveau Bilan
+          {t('page.bilan.newBilan')}
         </Button>
       </Box>
       <Box className={classes.body}>

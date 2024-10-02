@@ -54,10 +54,10 @@ export default function Dashboard() {
                 flexGrow: 1
               }}>
               <Routes>
-                <Route path="/" element={<Navigate to="/CLIENTS" />} />
-                <Route path="/CLIENTS" element={<Clients />} />
-                <Route path="/TARIFS" element={<Pricing />} />
-                <Route path="/BILAN" element={<BalanceSheets />} />
+                <Route path="/" element={<Navigate to="/clients" />} />
+                <Route path="/clients" element={<Clients />} />
+                <Route path="/tarifs" element={<Pricing />} />
+                <Route path="/bilan" element={<BalanceSheets />} />
               </Routes>
             </Box>
           </Box>

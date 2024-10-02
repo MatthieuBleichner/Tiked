@@ -17,6 +17,7 @@ import { config } from 'config';
 import { useClientsQuery, useClientMutation } from 'api/clients/hooks';
 import RootContainer from '../RootContainer';
 import { createStyles, makeStyles } from '@mui/styles';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -39,6 +40,7 @@ const useStyles = makeStyles(() =>
 
 const Clients: React.FC = () => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const queryClient = useQueryClient();
   const { currentCity } = useSelectedData();
@@ -81,10 +83,10 @@ const Clients: React.FC = () => {
     return null;
   }
   return (
-    <RootContainer title={'Clients'}>
+    <RootContainer title={t('page.clients.title')}>
       <Box className={classes.buttonWrapper}>
         <Button variant="contained" onClick={() => setIsOpened(true)}>
-          Nouveau client
+          {t('page.clients.newClient')}
         </Button>
       </Box>
       <Box className={classes.body}>
@@ -93,9 +95,9 @@ const Clients: React.FC = () => {
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">Prénom</TableCell>
-                  <TableCell align="center">Nom</TableCell>
-                  <TableCell align="center">Siren</TableCell>
+                  <TableCell align="center"> {t('page.clients.table.header.firstName')}</TableCell>
+                  <TableCell align="center">{t('page.clients.table.header.lastName')}</TableCell>
+                  <TableCell align="center">{t('page.clients.table.header.siret')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
