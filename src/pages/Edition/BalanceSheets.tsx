@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
 import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
-import RootContainer from '../RootContainer';
+import RootContainer from '../RootContainer/RootContainer';
 import { createStyles, makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 

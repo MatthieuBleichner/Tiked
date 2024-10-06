@@ -11,11 +11,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ClientModal from 'components/Modals/ClientModal';
-import Button from '@mui/material/Button';
 import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
 import { useClientsQuery, useClientMutation } from 'api/clients/hooks';
-import RootContainer from '../RootContainer';
+import RootContainer from '../RootContainer/RootContainer';
 import { createStyles, makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 

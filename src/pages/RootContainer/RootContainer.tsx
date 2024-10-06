@@ -1,9 +1,8 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { grey } from '@mui/material/colors';
 import Button from '@mui/material/Button';
-
+import { styles } from './styles';
 interface RootContainerProps {
   title: string;
   children: React.ReactNode;
@@ -17,21 +16,8 @@ const RootContainer: React.FC<RootContainerProps> = ({
   children
 }) => {
   return (
-    <Box
-      sx={{
-        borderRadius: 5,
-        backgroundColor: grey[50],
-        paddingTop: 2,
-        width: '100%'
-      }}>
-      <Box
-        sx={{
-          display: 'flex',
-          direction: 'row',
-          padding: 2,
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
+    <Box sx={styles.root}>
+      <Box sx={styles.headerContainer}>
         <Typography variant="h4" noWrap component="div">
           {title}
         </Typography>

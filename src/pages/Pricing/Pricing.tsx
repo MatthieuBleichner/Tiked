@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { usePricingsQuery } from 'api/pricings/hooks';
-import RootContainer from '../RootContainer';
+import RootContainer from '../RootContainer/RootContainer';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 

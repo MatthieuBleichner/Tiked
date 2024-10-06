@@ -10,7 +10,6 @@ import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { grey } from '@mui/material/colors';
 
 const drawerWidth = 240;
@@ -119,9 +118,6 @@ export default function TopMenu() {
       </MenuItem>
     </Menu>
   );
-
-  const isMobile = useMediaQuery(`(max-width: 760px)`);
-  const open = !isMobile;
 
   return (
     <>
