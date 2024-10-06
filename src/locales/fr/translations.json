@@ -4,6 +4,7 @@
     "menu.bilan": "Bilan",
     "page.bilan.title": "Bilan",
     "page.bilan.newBilan": "Nouveau bilan",
+    "page.bilan.openOtherBalancesheet": "Ouvrir un autre bilan",
     "page.clients.title": "Clients",
     "page.clients.newClient": "Nouveau client",
     "page.clients.table.header.firstName": "Prénom",

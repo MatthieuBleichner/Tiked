@@ -3,41 +3,18 @@ import Box from '@mui/material/Box';
 import { useQueryClient } from '@tanstack/react-query';
 import { IBalanceSheet } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
 import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
 import RootContainer from '../RootContainer/RootContainer';
-import { createStyles, makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    buttonWrapper: {
-      paddingLeft: 2,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      width: '100%'
-    },
-    body: {
-      flex: 1,
-      borderRadius: 5,
-      height: '80%',
-      padding: 2,
-      display: 'flex'
-    }
-  })
-);
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+
+import { BalanceSheetShortcut } from 'components';
 
 const BalanceSheets: React.FC = () => {
-  const classes = useStyles();
   const queryClient = useQueryClient();
   const { currentMarket } = useSelectedData();
   const { t } = useTranslation();
@@ -48,10 +25,6 @@ const BalanceSheets: React.FC = () => {
   ]);
 
   const [selectedSheet, setSelectedSheet] = React.useState<IBalanceSheet | undefined | null>();
-  const handleOpen = (e: React.MouseEvent<HTMLTableCellElement>) => {
-    console.log(e.currentTarget.id);
-    setSelectedSheet(sheets?.find(sheet => sheet.id === e.currentTarget.id));
-  };
   const handleClose = () => setSelectedSheet(null);
 
   const [openCrationMode, setCreationModeIsOpened] = useState(false);
@@ -65,39 +38,82 @@ const BalanceSheets: React.FC = () => {
       title={t('page.bilan.title')}
       buttonText={t('page.bilan.newBilan')}
       onClickButton={() => setCreationModeIsOpened(true)}>
-      <Box className={classes.body}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
-          <TableContainer component={Paper} sx={{ height: '60%' }}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sheets?.map(balanceSheet => (
-                  <TableRow
-                    key={balanceSheet.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell
-                      id={balanceSheet.id}
-                      component="th"
-                      scope="client"
-                      onClick={handleOpen}>
-                      {balanceSheet.date.toLocaleString('fr-FR', { weekday: 'long' }) +
-                        ' ' +
-                        balanceSheet.date.getDate() +
-                        ' ' +
-                        balanceSheet.date.toLocaleString('fr-FR', { month: 'long' }) +
-                        ' ' +
-                        balanceSheet.date.getFullYear()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+      <Box>
+        {sheets.length ? (
+          <React.Fragment>
+            <Box
+              sx={{
+                flexDirection: 'row',
+                display: 'flex',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'space-around'
+              }}>
+              {sheets.length > 0 && (
+                <BalanceSheetShortcut
+                  sheet={sheets[0]}
+                  onClick={sheet => setSelectedSheet(sheet)}
+                />
+              )}
+              {sheets.length > 1 && (
+                <BalanceSheetShortcut
+                  sheet={sheets[1]}
+                  onClick={sheet => setSelectedSheet(sheet)}
+                />
+              )}
+              {sheets.length > 2 && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
+                  <Autocomplete
+                    id="balancehseetautocomplete"
+                    sx={{ width: '100%' }}
+                    options={sheets}
+                    autoHighlight
+                    getOptionLabel={option =>
+                      option.date.toLocaleString('fr-FR', {
+                        weekday: 'long',
+                        month: 'long',
+                        year: 'numeric',
+                        day: 'numeric'
+                      })
+                    }
+                    renderOption={(props, option) => {
+                      const { ...optionProps } = props;
+                      return (
+                        <Box
+                          component="li"
+                          sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                          {...optionProps}
+                          key={option.id}>
+                          {option.date.toLocaleString('fr-FR', {
+                            weekday: 'long',
+                            month: 'long',
+                            year: 'numeric',
+                            day: 'numeric'
+                          })}
+                        </Box>
+                      );
+                    }}
+                    onChange={(e, value) => setSelectedSheet(value)}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        label={t('page.bilan.openOtherBalancesheet')}
+                        slotProps={{
+                          htmlInput: {
+                            ...params.inputProps,
+                            autoComplete: 'new-password' // disable autocomplete and autofill
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                </Box>
+              )}
+            </Box>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>{'Pas de bilan pour ce marché'}</React.Fragment>
+        )}
       </Box>
       {selectedSheet && (
         <BalanceSheetModal
