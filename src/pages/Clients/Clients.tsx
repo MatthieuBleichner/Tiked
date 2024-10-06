@@ -83,15 +83,13 @@ const Clients: React.FC = () => {
     return null;
   }
   return (
-    <RootContainer title={t('page.clients.title')}>
-      <Box className={classes.buttonWrapper}>
-        <Button variant="contained" onClick={() => setIsOpened(true)}>
-          {t('page.clients.newClient')}
-        </Button>
-      </Box>
+    <RootContainer
+      title={t('page.clients.title')}
+      buttonText={t('page.clients.newClient')}
+      onClickButton={() => setIsOpened(true)}>
       <Box className={classes.body}>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ height: '60%' }}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>

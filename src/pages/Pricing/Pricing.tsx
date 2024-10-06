@@ -26,7 +26,7 @@ const Pricing: React.FC = () => {
     <RootContainer title={t('page.pricings.title')}>
       <Box sx={styles.container}>
         <Box sx={styles.tableContainer}>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ height: '60%' }}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>

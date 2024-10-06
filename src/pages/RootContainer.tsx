@@ -2,34 +2,45 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { grey } from '@mui/material/colors';
+import Button from '@mui/material/Button';
 
 interface RootContainerProps {
   title: string;
   children: React.ReactNode;
+  buttonText?: string;
+  onClickButton?: () => void;
 }
-const RootContainer: React.FC<RootContainerProps> = ({ title, children }) => {
+const RootContainer: React.FC<RootContainerProps> = ({
+  title,
+  buttonText,
+  onClickButton,
+  children
+}) => {
   return (
     <Box
       sx={{
-        flex: 1,
         borderRadius: 5,
-        //marginTop: 2,
-        height: '80%',
         backgroundColor: grey[50],
-        padding: 2
-        //paddingLeft: 5
+        paddingTop: 2,
+        width: '100%'
       }}>
       <Box
         sx={{
           display: 'flex',
           direction: 'row',
           padding: 2,
-          flex: 1,
-          justifyContent: 'flex-start'
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
         <Typography variant="h4" noWrap component="div">
           {title}
         </Typography>
+
+        {buttonText && (
+          <Button variant="contained" onClick={onClickButton}>
+            {buttonText}
+          </Button>
+        )}
       </Box>
       {children}
     </Box>

@@ -26,6 +26,7 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
   }),
+  backgroundColor: grey[100],
   variants: [
     {
       props: ({ open }) => open,
@@ -124,7 +125,7 @@ export default function TopMenu() {
 
   return (
     <>
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={false}>
         <Toolbar>
           <Box
             sx={{

@@ -11,7 +11,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
-import Button from '@mui/material/Button';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
 import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
 import RootContainer from '../RootContainer';
@@ -25,7 +24,7 @@ const useStyles = makeStyles(() =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      width: '50%'
+      width: '100%'
     },
     body: {
       flex: 1,
@@ -62,15 +61,13 @@ const BalanceSheets: React.FC = () => {
   }
 
   return (
-    <RootContainer title={t('page.bilan.title')}>
-      <Box className={classes.buttonWrapper}>
-        <Button variant="contained" onClick={() => setCreationModeIsOpened(true)}>
-          {t('page.bilan.newBilan')}
-        </Button>
-      </Box>
+    <RootContainer
+      title={t('page.bilan.title')}
+      buttonText={t('page.bilan.newBilan')}
+      onClickButton={() => setCreationModeIsOpened(true)}>
       <Box className={classes.body}>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ height: '60%' }}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
