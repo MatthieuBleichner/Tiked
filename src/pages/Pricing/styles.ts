@@ -6,7 +6,7 @@ const style = {
     justifyContent: 'center',
     width: '100%'
   },
-  tableContainer: { display: 'flex', justifyContent: 'center', width: '50%' }
+  tableContainer: { display: 'flex', justifyContent: 'center', width: { xs: '70%', md: '50%' } }
 } as const;
 
 export default style;

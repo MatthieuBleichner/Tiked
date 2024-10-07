@@ -54,7 +54,7 @@ export default function Dashboard() {
               //flexGrow: 1
             }}>
             <Grid container spacing={2} sx={{ height: '100%', width: '100%', bgColor: 'red' }}>
-              <Grid size={{ xs: 12, md: 6 }} sx={{ height: '50%' }}>
+              <Grid size={{ xs: 12, md: 6 }} sx={{ height: { xs: '70%', md: '50%' } }}>
                 <Box sx={styles.card}>
                   <BalanceSheets />
                 </Box>

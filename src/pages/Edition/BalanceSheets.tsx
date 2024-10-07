@@ -62,7 +62,7 @@ const BalanceSheets: React.FC = () => {
             }}>
             <Box
               sx={{
-                flexDirection: 'row',
+                flexDirection: { xs: 'column', md: 'row' },
                 display: 'flex',
                 width: '100%',
                 alignItems: 'flex-start',
@@ -73,7 +73,7 @@ const BalanceSheets: React.FC = () => {
                 sx={{
                   flexDirection: 'column',
                   display: 'flex',
-                  width: '50%',
+                  width: { xs: '100%', md: '50%' },
                   height: '100%',
                   alignItems: 'flex-start',
                   marginLeft: 2
@@ -101,21 +101,23 @@ const BalanceSheets: React.FC = () => {
               {sheets.length > 2 && (
                 <Box
                   sx={{
-                    width: '50%',
+                    width: { xs: '100%', md: '50%' },
                     height: '100%',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    marginLeft: 2,
+                    marginTop: { xs: 3, md: 0 }
                   }}>
                   {t('page.balancesheet.OtherSheets')}
                   <Box
                     sx={{
                       display: 'flex',
                       justifyContent: 'flex-start',
-                      width: '50%',
+                      width: { xs: '100%', md: '50%' },
                       marginTop: 1
                     }}>
                     <Autocomplete
                       id="balancehseetautocomplete"
-                      sx={{ width: '100%' }}
+                      sx={{ width: { xs: '60%', md: '100%' } }}
                       options={sheets}
                       autoHighlight
                       getOptionLabel={option =>
