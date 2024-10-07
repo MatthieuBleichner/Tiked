@@ -26,12 +26,14 @@ const Pricing: React.FC = () => {
     <RootContainer title={t('page.pricings.title')}>
       <Box sx={styles.container}>
         <Box sx={styles.tableContainer}>
-          <TableContainer component={Paper} sx={{ height: '60%' }}>
+          <TableContainer component={Paper} sx={{ height: '100%' }}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Nom</TableCell>
-                  <TableCell align="right">Tarif</TableCell>
+                  <TableCell size="small">Nom</TableCell>
+                  <TableCell align="right" size="small">
+                    Tarif
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -39,10 +41,12 @@ const Pricing: React.FC = () => {
                   <TableRow
                     key={pricing.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell component="th" scope="client">
+                    <TableCell component="th" scope="client" size="small">
                       {pricing.name}
                     </TableCell>
-                    <TableCell align="right">{pricing.price} €</TableCell>
+                    <TableCell align="right" size="small">
+                      {pricing.price} €
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
