@@ -1,44 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { IClient } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ClientModal from 'components/Modals/ClientModal';
+import ClientModal from 'components/Modals/ClientModal/ClientModal';
 import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
 import { useClientsQuery, useClientMutation } from 'api/clients/hooks';
 import RootContainer from '../RootContainer/RootContainer';
-import { createStyles, makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    buttonWrapper: {
-      paddingLeft: 2,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      width: '50%'
-    },
-    body: {
-      flex: 1,
-      borderRadius: 5,
-      height: '80%',
-      padding: 2,
-      display: 'flex'
-    }
-  })
-);
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 const Clients: React.FC = () => {
-  const classes = useStyles();
   const { t } = useTranslation();
 
   const queryClient = useQueryClient();
@@ -77,6 +56,13 @@ const Clients: React.FC = () => {
   };
 
   const [open, setIsOpened] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<IClient>(clients?.[0]);
+
+  useEffect(() => {
+    if (clients?.length && !selectedClient) {
+      setSelectedClient(clients[0]);
+    }
+  }, [clients]);
 
   if (!currentCity) {
     return null;
@@ -86,32 +72,62 @@ const Clients: React.FC = () => {
       title={t('page.clients.title')}
       buttonText={t('page.clients.newClient')}
       onClickButton={() => setIsOpened(true)}>
-      <Box className={classes.body}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%' }}>
-          <TableContainer component={Paper} sx={{ height: '60%' }}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center"> {t('page.clients.table.header.firstName')}</TableCell>
-                  <TableCell align="center">{t('page.clients.table.header.lastName')}</TableCell>
-                  <TableCell align="center">{t('page.clients.table.header.siret')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {clients?.map(client => (
-                  <TableRow
-                    key={client.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell align="center" component="th" scope="client">
-                      {client.firstName}
-                    </TableCell>
-                    <TableCell align="center">{client.lastName}</TableCell>
-                    <TableCell align="center">{client.siren}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+      <Box
+        sx={{
+          flex: 1,
+          borderRadius: 5,
+          height: '80%',
+          padding: 2,
+          display: 'flex',
+          flexdirection: 'row'
+        }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            width: '30%',
+            height: '85%',
+            zIndex: 5
+          }}>
+          <List sx={{ maxHeight: '100%', overflow: 'auto', width: '100%' }} component={Paper}>
+            {clients?.map(client => (
+              <React.Fragment key={client.id}>
+                <ListItem disablePadding key={client.id}>
+                  <ListItemButton
+                    component="a"
+                    href="#simple-list"
+                    selected={client.id === selectedClient?.id}
+                    onClick={() => setSelectedClient(client)}>
+                    <ListItemText
+                      sx={{ color: 'primary.main' }}
+                      primary={`${client.firstName} ${client.lastName}`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))}
+          </List>
+        </Box>
+        <Box sx={{ width: '70%', height: '87%', padding: 2, paddingLeft: 4 }}>
+          <Typography color={'primary.main'} fontWeight={'fontWeightBold'} variant="h5">
+            {' '}
+            {`${selectedClient?.firstName} ${selectedClient?.lastName}`}{' '}
+          </Typography>
+          {selectedClient?.job && (
+            <Typography sx={{ paddingTop: 1 }} fontWeight={'fontWeightBold'}>
+              {selectedClient.job}
+            </Typography>
+          )}
+          {selectedClient?.mail && (
+            <Typography sx={{ paddingTop: 1 }}>{selectedClient.mail}</Typography>
+          )}
+          {selectedClient?.address && (
+            <Typography sx={{ paddingTop: 1 }}>
+              {selectedClient.address} {selectedClient.postalCode} {selectedClient.city}
+            </Typography>
+          )}
+          <Typography sx={{ paddingTop: 1 }}>{`Siret: ${selectedClient?.siren}`}</Typography>
         </Box>
         <ClientModal
           open={open}

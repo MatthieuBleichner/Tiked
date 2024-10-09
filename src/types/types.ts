@@ -17,6 +17,11 @@ export interface IClient {
   lastName: string;
   cityId: string;
   siren: string;
+  postalCode?: number;
+  city?: string;
+  address?: string;
+  mail?: string;
+  job?: string;
 }
 
 export interface IPricing {
