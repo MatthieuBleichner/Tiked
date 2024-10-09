@@ -79,13 +79,13 @@ const Clients: React.FC = () => {
           height: '80%',
           padding: 2,
           display: 'flex',
-          flexdirection: 'row'
+          flexDirection: { xs: 'column', md: 'row' }
         }}>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'flex-start',
-            width: '30%',
+            width: { xs: '100%', md: '30%' },
             height: '85%',
             zIndex: 5
           }}>
@@ -109,7 +109,7 @@ const Clients: React.FC = () => {
             ))}
           </List>
         </Box>
-        <Box sx={{ width: '70%', height: '87%', padding: 2, paddingLeft: 4 }}>
+        <Box sx={{ width: { xs: '100%', md: '70%' }, height: '87%', padding: 2, paddingLeft: 4 }}>
           <Typography color={'primary.main'} fontWeight={'fontWeightBold'} variant="h5">
             {' '}
             {`${selectedClient?.firstName} ${selectedClient?.lastName}`}{' '}

@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CitiesAndMarketsHorizontalPanel, TopMenu } from 'components';
-import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Clients from '../Clients/Clients';
 import Pricing from '../Pricing/Pricing';
@@ -24,7 +23,7 @@ export default function Dashboard() {
   const isMobile = useMediaQuery(`(max-width: 760px)`);
 
   return (
-    <Box sx={{ display: 'flex', bgcolor: grey[200], width: '100%', height: '100vh' }}>
+    <Box sx={{ display: 'flex', width: '100%', height: '100%' }}>
       <CssBaseline />
       {!isMobile && <TopMenu />}
       <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
@@ -64,7 +63,7 @@ export default function Dashboard() {
                   <Pricing />
                 </Box>
               </Grid>
-              <Grid size={{ xs: 12, md: 6 }} sx={{ height: '50%' }}>
+              <Grid size={{ xs: 12, md: 6 }} sx={{ height: { xs: '70%', md: '50%' } }}>
                 <Box sx={styles.card}>
                   <Clients />
                 </Box>
