@@ -37,9 +37,15 @@ export interface IBalanceSheet {
   marketId: string;
 }
 
+export enum PaiementMethod {
+  CASH = 'cash',
+  CHECK = 'check',
+  CB = 'cb'
+}
 export interface IBalanceSheetDetails {
   id: string;
   balanceSheetId: string;
   clientId: string;
   total: number;
+  paiementType: PaiementMethod;
 }

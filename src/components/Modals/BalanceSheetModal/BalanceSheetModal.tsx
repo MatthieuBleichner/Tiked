@@ -23,7 +23,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
 import BalanceSheetDetailsPDF from '../../PDF/BalanceSheetDetailsPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import BalanceSheetDetailsModal from '../BalanceSheetDetailsModal';
+import BalanceSheetDetailsModal from '../BalanceSheetDetailsModal/BalanceSheetDetailsModal';
 import { useClientsQuery } from 'api/clients/hooks';
 import { useBalanceSheetDetailsQuery } from 'api/balanceSheetDetails/hooks';
 

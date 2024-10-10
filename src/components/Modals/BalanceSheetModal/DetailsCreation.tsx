@@ -12,7 +12,7 @@ import {
 import React, { useState } from 'react';
 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { IBalanceSheetDetails, IBalanceSheet } from 'types/types';
+import { IBalanceSheetDetails, IBalanceSheet, PaiementMethod } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import { v6 as uuid } from 'uuid';
 import { usePricingsQuery } from 'api/pricings/hooks';
@@ -75,7 +75,8 @@ const DetailsCreation = ({ balanceSheet, onAddDetail }: DetailCreationProps) => 
         id: uuid(),
         clientId: selectedClientId,
         total: total,
-        balanceSheetId: balanceSheet?.id
+        balanceSheetId: balanceSheet?.id,
+        paiementType: PaiementMethod.CASH
       });
   };
   return (
