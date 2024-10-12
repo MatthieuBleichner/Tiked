@@ -8,7 +8,7 @@ const fetchBalanceSheetDetails: (
   arg0: IBalanceSheet | undefined | null
 ) => Promise<Response> = async balanceSheet => {
   if (balanceSheet) {
-    return fetch(`${config.API_URL}balanceSheetDetails?balanceSheetId=${balanceSheet?.id}`);
+    return fetch(`${config.API_URL}invoices?balanceSheetId=${balanceSheet?.id}`);
   } else {
     return Promise.resolve(new Response());
   }
@@ -46,7 +46,7 @@ export const useBalanceSheetDetailsMutation = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formatQueryData(newBalanceSheetDetail))
       };
-      return fetch(`${config.API_URL}balanceSheetDetail?`, requestOptions)
+      return fetch(`${config.API_URL}invoice?`, requestOptions)
         .then(response => response.json())
         .then(response => formatResponse(response));
     },

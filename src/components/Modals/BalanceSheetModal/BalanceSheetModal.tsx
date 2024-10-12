@@ -211,6 +211,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
         onClose={() => setOpenModal(false)}
         balanceSheet={balanceSheet}
         onAddDetail={onAddDetail}
+        invoiceId={details?.length + 1}
       />
     </React.Fragment>
   );

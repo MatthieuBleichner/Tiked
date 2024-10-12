@@ -44,6 +44,7 @@ interface BalanceSheetDetailsModalProps {
   onClose: () => void;
   balanceSheet: IBalanceSheet;
   onAddDetail: (arg0: IBalanceSheetDetails[]) => void;
+  invoiceId: number;
 }
 
 enum fieldError {
@@ -58,7 +59,8 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
   open,
   onClose,
   balanceSheet,
-  onAddDetail
+  onAddDetail,
+  invoiceId
 }) => {
   const { t } = useTranslation();
   const [selectedClientId, setSelectedClientId] = useState<string>();
@@ -122,6 +124,12 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
       });
       return;
     }
+    const currentCityPrefix = ('00' + currentCity?.invoicePrefix).slice(-3);
+    const currentMarketPrefix = ('00' + currentMarket?.invoicePrefix).slice(-3);
+    const currentMonthPrefix = ('0' + balanceSheet.date.getMonth()).slice(-2);
+    const currentDayPrefix = ('0' + balanceSheet.date.getDay()).slice(-2);
+    const currentInvoiceId = ('00000' + invoiceId).slice(-7);
+    const fullInvoiceId = `${currentCityPrefix}-${currentMarketPrefix}-${balanceSheet.date.getFullYear()}${currentMonthPrefix}${currentDayPrefix}-${currentInvoiceId}`;
     selectedClientId &&
       total &&
       balanceSheet?.id &&
@@ -130,7 +138,8 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
         clientId: selectedClientId,
         total: total,
         balanceSheetId: balanceSheet?.id,
-        paiementType: selectedPaiementMethod as PaiementMethod
+        paiementType: selectedPaiementMethod as PaiementMethod,
+        invoiceId: fullInvoiceId
       });
     onClose();
   };

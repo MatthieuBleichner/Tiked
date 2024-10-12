@@ -1,6 +1,7 @@
 export interface ICity {
   id: string;
   name: string;
+  invoicePrefix: number;
 }
 
 export interface IMarket {
@@ -9,6 +10,7 @@ export interface IMarket {
   city: ICity;
   dates: string;
   color: string;
+  invoicePrefix: number;
 }
 
 export interface IClient {
@@ -48,4 +50,5 @@ export interface IBalanceSheetDetails {
   clientId: string;
   total: number;
   paiementType: PaiementMethod;
+  invoiceId: string;
 }
