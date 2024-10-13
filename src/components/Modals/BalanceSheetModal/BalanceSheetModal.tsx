@@ -18,7 +18,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { IBalanceSheetDetails, IBalanceSheet } from 'types/types';
+import { IBalanceSheetDetails, IBalanceSheet, PaiementMethod } from 'types/types';
 import { useQueryClient } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
 import BalanceSheetDetailsPDF from '../../PDF/BalanceSheetDetailsPDF';
@@ -61,6 +61,21 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
 
   const onEditButtonPress = () => setInEditMode(!inEditMode);
 
+  const totalRevenues = details?.reduce(
+    (acc, detail) => {
+      acc.total = acc.total + detail.total;
+      if (detail.paiementType === PaiementMethod.CASH) {
+        acc.cash = acc.cash + detail.total;
+      } else if (detail.paiementType === PaiementMethod.CB) {
+        acc.cb = acc.cb + detail.total;
+      } else if (detail.paiementType === PaiementMethod.CHECK) {
+        acc.check = acc.check + detail.total;
+      }
+
+      return acc;
+    },
+    { total: 0, cash: 0, check: 0, cb: 0 }
+  );
   return (
     <React.Fragment>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -165,8 +180,14 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="left" sx={{ width: '50%' }}>
+                  <TableCell align="left" sx={{ width: '25%' }}>
                     Client
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: '25%' }}>
+                    Moyen de paiement
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: '25%' }}>
+                    Facture
                   </TableCell>
                   <TableCell align="center">A payé</TableCell>
                 </TableRow>
@@ -182,6 +203,12 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                         {`${client?.firstName} ${client?.lastName}`}
                       </TableCell>
                       <TableCell id={detail.id} component="th" scope="client" align="center">
+                        {`${detail?.paiementType}`}
+                      </TableCell>
+                      <TableCell id={detail.id} component="th" scope="client" align="center">
+                        {`${detail?.invoiceId}`}
+                      </TableCell>
+                      <TableCell id={detail.id} component="th" scope="client" align="center">
                         {`${detail?.total} €`}
                       </TableCell>
                     </TableRow>
@@ -190,16 +217,38 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               </TableBody>
             </Table>
           </TableContainer>
-          <TableContainer component={Paper} sx={{ width: '50%', marginTop: 2 }}>
-            <Table aria-label="simple table">
+          <TableContainer component={Paper} sx={{ width: '25%', marginTop: 2 }}>
+            <Table aria-label="simple table" size="small">
               <TableBody>
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client" align="left" sx={{ width: '50%' }}>
-                    Total
+                  <TableCell component="th" scope="client" align="left" sx={{ width: '75%' }}>
+                    Total Cash
                   </TableCell>
                   <TableCell component="th" scope="client" align="center">
-                    {`${details?.reduce((acc, detail) => acc + detail.total, 0)} €`}
+                    {`${totalRevenues.cash} €`}
                   </TableCell>
+                </TableRow>
+                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell component="th" scope="client" align="left" sx={{ width: '75%' }}>
+                    Total CB
+                  </TableCell>
+                  <TableCell component="th" scope="client" align="center">
+                    {`${totalRevenues.cb} €`}
+                  </TableCell>
+                </TableRow>
+                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell component="th" scope="client" align="left" sx={{ width: '75%' }}>
+                    Total Cheque
+                  </TableCell>
+                  <TableCell component="th" scope="client" align="center">
+                    {`${totalRevenues.check} €`}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left" sx={{ width: '75%' }}>
+                    Total
+                  </TableCell>
+                  <TableCell align="center">{`${totalRevenues.total} €`}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

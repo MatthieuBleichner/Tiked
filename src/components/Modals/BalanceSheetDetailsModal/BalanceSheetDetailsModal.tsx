@@ -126,8 +126,8 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
     }
     const currentCityPrefix = ('00' + currentCity?.invoicePrefix).slice(-3);
     const currentMarketPrefix = ('00' + currentMarket?.invoicePrefix).slice(-3);
-    const currentMonthPrefix = ('0' + balanceSheet.date.getMonth()).slice(-2);
-    const currentDayPrefix = ('0' + balanceSheet.date.getDay()).slice(-2);
+    const currentMonthPrefix = ('0' + balanceSheet.date.getMonth() + 1).slice(-2);
+    const currentDayPrefix = ('0' + balanceSheet.date.getDate()).slice(-2);
     const currentInvoiceId = ('00000' + invoiceId).slice(-7);
     const fullInvoiceId = `${currentCityPrefix}-${currentMarketPrefix}-${balanceSheet.date.getFullYear()}${currentMonthPrefix}${currentDayPrefix}-${currentInvoiceId}`;
     selectedClientId &&

@@ -3,7 +3,14 @@ import { Image, Text, View, Page, Document, StyleSheet } from '@react-pdf/render
 
 import logo from '../../../../../public/logo_sb_marche.png';
 
-import { IMarket, ICity, IBalanceSheetDetails, IBalanceSheet, IClient } from 'types/types';
+import {
+  IMarket,
+  ICity,
+  IBalanceSheetDetails,
+  IBalanceSheet,
+  IClient,
+  PaiementMethod
+} from 'types/types';
 
 interface BalanceSheetDetailsPDFProps {
   currentMarket: IMarket;
@@ -98,6 +105,22 @@ const BalanceSheetDetailsPDF = ({
     tbody2: { flex: 2, borderRightWidth: 1 }
   });
 
+  const totalRevenues = balanceSheetDetails?.reduce(
+    (acc, detail) => {
+      acc.total = acc.total + detail.total;
+      if (detail.paiementType === PaiementMethod.CASH) {
+        acc.cash = acc.cash + detail.total;
+      } else if (detail.paiementType === PaiementMethod.CB) {
+        acc.cb = acc.cb + detail.total;
+      } else if (detail.paiementType === PaiementMethod.CHECK) {
+        acc.check = acc.check + detail.total;
+      }
+
+      return acc;
+    },
+    { total: 0, cash: 0, check: 0, cb: 0 }
+  );
+
   const PDFTitle = () => (
     <View style={styles.titleContainer}>
       <View style={styles.spaceBetween}>
@@ -144,11 +167,11 @@ const BalanceSheetDetailsPDF = ({
 
   const TableHead = () => (
     <View style={{ width: '100%', flexDirection: 'row', marginTop: 10 }}>
-      <View style={[styles.theader, styles.theader2]}>
+      <View style={[styles.theader]}>
         <Text>Clients</Text>
       </View>
       <View style={styles.theader}>
-        <Text>Articles</Text>
+        <Text>Facture</Text>
       </View>
       <View style={styles.theader}>
         <Text>Moyen de paiement</Text>
@@ -166,16 +189,16 @@ const BalanceSheetDetailsPDF = ({
         return (
           <Fragment key={details.id}>
             <View style={{ width: '100%', flexDirection: 'row' }}>
-              <View style={[styles.tbody, styles.tbody2]}>
+              <View style={[styles.tbody]}>
                 <Text>
                   {client?.firstName} {client?.lastName}
                 </Text>
               </View>
               <View style={styles.tbody}>
-                <Text>Abonné annuel</Text>
+                <Text>{details.invoiceId}</Text>
               </View>
               <View style={styles.tbody}>
-                <Text>Espèces</Text>
+                <Text>{details.paiementType} </Text>
               </View>
               <View style={styles.tbody}>
                 <Text>{details.total}</Text>
@@ -187,23 +210,54 @@ const BalanceSheetDetailsPDF = ({
     </Fragment>
   );
 
-  const TableTotal = () => (
-    <View style={{ width: '100%', flexDirection: 'row' }}>
-      <View style={styles.total}>
-        <Text></Text>
+  const TableTotal: React.FC<{ paiementMethod?: PaiementMethod; value: number }> = ({
+    paiementMethod,
+    value
+  }) => {
+    let translation = 'Total';
+    if (paiementMethod === PaiementMethod.CASH) {
+      translation = 'Total cash';
+    } else if (paiementMethod === PaiementMethod.CHECK) {
+      translation = 'Total chèque';
+    } else if (paiementMethod === PaiementMethod.CB) {
+      translation = 'Total cb';
+    }
+    return (
+      <View style={{ width: '100%', flexDirection: 'row' }}>
+        <View style={styles.total}>
+          <Text></Text>
+        </View>
+        <View style={styles.total}>
+          <Text> </Text>
+        </View>
+        <View style={styles.tbody}>
+          <Text>{translation}</Text>
+        </View>
+        <View style={styles.tbody}>
+          <Text>{value}</Text>
+        </View>
       </View>
-      <View style={styles.total}>
-        <Text> </Text>
-      </View>
-      <View style={styles.tbody}>
-        <Text>Total</Text>
-      </View>
-      <View style={styles.tbody}>
-        <Text>{balanceSheetDetails.reduce((sum, details) => sum + details.total, 0)}</Text>
-      </View>
-    </View>
-  );
+    );
+  };
 
+  const EmptyLine = () => {
+    return (
+      <View style={{ width: '100%', flexDirection: 'row' }}>
+        <View style={styles.total}>
+          <Text></Text>
+        </View>
+        <View style={styles.total}>
+          <Text> </Text>
+        </View>
+        <View style={styles.total}>
+          <Text> </Text>
+        </View>
+        <View style={styles.total}>
+          <Text> </Text>
+        </View>
+      </View>
+    );
+  };
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -212,7 +266,11 @@ const BalanceSheetDetailsPDF = ({
         <MarketDetails />
         <TableHead />
         <TableBody />
-        <TableTotal />
+        <EmptyLine />
+        <TableTotal paiementMethod={PaiementMethod.CASH} value={totalRevenues.cash} />
+        <TableTotal paiementMethod={PaiementMethod.CHECK} value={totalRevenues.check} />
+        <TableTotal paiementMethod={PaiementMethod.CB} value={totalRevenues.cb} />
+        <TableTotal value={totalRevenues.total} />
       </Page>
     </Document>
   );
