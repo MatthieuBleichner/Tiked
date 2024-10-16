@@ -5,9 +5,9 @@ import Grid from '@mui/material/Grid2';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CitiesAndMarketsHorizontalPanel, TopMenu } from 'components';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Clients from '../Clients/Clients';
-import Pricing from '../Pricing/Pricing';
-import BalanceSheets from '../Edition/BalanceSheets';
+import Clients from '../../components/Clients/Clients';
+import Pricing from '../../components/Pricing/Pricing';
+import BalanceSheets from '../../components/Edition/BalanceSheets';
 import { styles } from './styles';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
