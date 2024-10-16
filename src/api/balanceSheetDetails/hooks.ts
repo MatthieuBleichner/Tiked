@@ -3,30 +3,11 @@ import { config } from 'config';
 import { formatResponse, formatQueryData } from '../utils';
 
 import { IBalanceSheet, IBalanceSheetDetails } from 'types/types';
+import { getBalanceSheetInvoicesQuery } from './helpers';
 
-const fetchBalanceSheetDetails: (
-  arg0: IBalanceSheet | undefined | null
-) => Promise<Response> = async balanceSheet => {
-  if (balanceSheet) {
-    return fetch(`${config.API_URL}invoices?balanceSheetId=${balanceSheet?.id}`);
-  } else {
-    return Promise.resolve(new Response());
-  }
-};
-
-export const useBalanceSheetDetailsQuery = (
-  balanceSheet: IBalanceSheet | undefined,
-  queryKey: string[]
-) => {
+export const useBalanceSheetDetailsQuery = (balanceSheet: IBalanceSheet) => {
   return useQuery<IBalanceSheetDetails[]>({
-    queryKey: queryKey,
-    queryFn: () =>
-      fetchBalanceSheetDetails(balanceSheet)
-        .then(res => res.json())
-        .then(res => {
-          return formatResponse(res) as IBalanceSheetDetails[];
-        }),
-    enabled: !!balanceSheet
+    ...getBalanceSheetInvoicesQuery(balanceSheet)
   });
 };
 

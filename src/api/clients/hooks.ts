@@ -3,32 +3,22 @@ import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
 
 import { IClient, ICity } from 'types/types';
-
-const fetchClients: (arg0: ICity | undefined) => Promise<Response> = async currentCity => {
-  return fetch(`${config.API_URL}clients?cityId=${currentCity?.id}`);
-};
+import { getClientsQuery } from './helpers';
 
 export const useClientsQuery = (
   currentCity: ICity | undefined,
   onSuccess?: (res: IClient[]) => void
 ) => {
   return useSuspenseQuery<IClient[]>({
-    queryKey: ['clients', currentCity?.id || ''],
-    queryFn: () =>
-      fetchClients(currentCity)
-        .then(res => res.json())
-        .then(res => {
-          res.length && onSuccess?.(res);
-          return formatResponse(res) as IClient[];
-        })
+    ...getClientsQuery(currentCity, onSuccess)
   });
 };
 
-interface useBalanceSheetMutationParams {
+interface useClientMutationParams {
   onSuccess?: (arg0: IClient[]) => void;
   onError?: (arg0: Error) => void;
 }
-export const useClientMutation = ({ onSuccess, onError }: useBalanceSheetMutationParams) => {
+export const useClientMutation = ({ onSuccess, onError }: useClientMutationParams) => {
   return useMutation({
     mutationFn: (newClient: IClient) => {
       const requestOptions = {

@@ -1,13 +1,12 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Box from '@mui/material/Box';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { ICity, IClient } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Paper from '@mui/material/Paper';
 import ClientModal from 'components/Modals/ClientModal/ClientModal';
-import { formatResponse, formatQueryData } from 'api/utils';
-import { config } from 'config';
-import { useClientsQuery, useClientMutation } from 'api/clients/hooks';
+import { useClientMutation } from 'api/clients/hooks';
+import { getClientsQuery } from 'api/clients/helpers';
 import RootContainer from '../RootContainer/RootContainer';
 import RootContainerLoading from '../RootContainer/RootContainerLoading';
 
@@ -18,7 +17,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 
 interface ClientsProps {
@@ -29,32 +28,17 @@ const ClientsSuspense: React.FC<ClientsProps> = ({ currentCity }) => {
   const { t } = useTranslation();
 
   const queryClient = useQueryClient();
-  const { data: clients = [] } = useClientsQuery(currentCity);
-
-  const onAddClients = (newClients: IClient[]) =>
-    queryClient.setQueryData(['clients', currentCity?.id], [...clients, ...newClients]);
-  const mutation = useClientMutation({
-    onSuccess: data => onAddClients(data)
+  const { queryKey, queryFn } = getClientsQuery(currentCity);
+  const { data: clients = [] } = useSuspenseQuery<IClient[]>({
+    queryKey,
+    queryFn
   });
 
-  useMutation({
-    mutationFn: (newClient: IClient) => {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formatQueryData(newClient))
-      };
-      return fetch(`${config.API_URL}client?`, requestOptions)
-        .then(response => response.json())
-        .then(response => formatResponse(response));
-    },
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData(['clients', currentCity?.id], [...clients, ...(data as IClient[])]);
-      console.log('Dans le onSuccess, data :', data, 'variables :', variables);
-    },
-    onError: error => {
-      console.error('Error adding client:', error);
-    }
+  const onAddClients = (newClients: IClient[]) =>
+    queryClient.setQueryData(queryKey, [...clients, ...newClients]);
+
+  const mutation = useClientMutation({
+    onSuccess: data => onAddClients(data)
   });
 
   const handleAddClient = (client: IClient) => {

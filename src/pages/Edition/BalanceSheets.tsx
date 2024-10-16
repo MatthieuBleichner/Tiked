@@ -1,11 +1,11 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import Box from '@mui/material/Box';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { IBalanceSheet, IMarket } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
-import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
+import { getBalanceSheetQuery } from 'api/balanceSheets/helpers';
 import RootContainer from '../RootContainer/RootContainer';
 import RootContainerLoading from '../RootContainer/RootContainerLoading';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,10 @@ const BalanceSheetsSuspense: React.FC<BalanceSheetsSuspenseProps> = ({ currentMa
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
-  const { data: sheets = [] } = useBalanceSheetsDetailsQuery(currentMarket);
+  const query = getBalanceSheetQuery(currentMarket);
+  const { data: sheets = [] } = useSuspenseQuery<IBalanceSheet[]>({
+    ...query
+  });
 
   const [selectedSheet, setSelectedSheet] = React.useState<IBalanceSheet | undefined | null>();
   const handleClose = () => setSelectedSheet(null);
@@ -181,7 +184,7 @@ const BalanceSheetsSuspense: React.FC<BalanceSheetsSuspenseProps> = ({ currentMa
         open={openCrationMode}
         onClose={() => setCreationModeIsOpened(false)}
         onAddSheeet={data => {
-          queryClient.setQueryData(['sheets', currentMarket?.id], [...sheets, ...data]);
+          queryClient.setQueryData(query.queryKey, [...sheets, ...data]);
         }}
       />
     </RootContainer>

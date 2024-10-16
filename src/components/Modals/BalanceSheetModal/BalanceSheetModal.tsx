@@ -19,13 +19,13 @@ import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { IBalanceSheetDetails, IBalanceSheet, PaiementMethod } from 'types/types';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
 import BalanceSheetDetailsPDF from '../../PDF/BalanceSheetDetailsPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import BalanceSheetDetailsModal from '../BalanceSheetDetailsModal/BalanceSheetDetailsModal';
 import { useClientsQuery } from 'api/clients/hooks';
-import { useBalanceSheetDetailsQuery } from 'api/balanceSheetDetails/hooks';
+import { getBalanceSheetInvoicesQuery } from 'api/balanceSheetDetails/helpers';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -47,13 +47,11 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
   const { data: clients = [] } = useClientsQuery(currentCity);
 
   const queryClient = useQueryClient();
-  const { data: details = [] } = useBalanceSheetDetailsQuery(balanceSheet, [
-    'details',
-    balanceSheet?.id || ''
-  ]);
+  const queryMetadata = getBalanceSheetInvoicesQuery(balanceSheet);
+  const { data: details = [] } = useQuery({ ...queryMetadata });
 
   const onAddDetail = (detail: IBalanceSheetDetails[]) => {
-    queryClient.setQueryData(['details', balanceSheet?.id], [...details, ...detail]);
+    queryClient.setQueryData(queryMetadata.queryKey, [...details, ...detail]);
   };
 
   const [inEditMode, setInEditMode] = useState(false);
