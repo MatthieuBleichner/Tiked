@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { config } from 'config';
 
 import { IMarket, IPricing } from 'types/types';
@@ -8,9 +8,8 @@ const fetchPricings: (arg0: IMarket | undefined) => Promise<Response> = async cu
 };
 
 export const usePricingsQuery = (currentMarket: IMarket | undefined) => {
-  return useQuery<IPricing[]>({
+  return useSuspenseQuery<IPricing[]>({
     queryKey: ['pricings', currentMarket?.id],
-    queryFn: () => fetchPricings(currentMarket).then(res => res.json()),
-    enabled: !!currentMarket?.id
+    queryFn: () => fetchPricings(currentMarket).then(res => res.json())
   });
 };

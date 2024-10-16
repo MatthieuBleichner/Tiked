@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { config } from 'config';
 import { formatResponse, formatQueryData } from '../utils';
 
@@ -27,12 +27,9 @@ const fetchBalanceSheets: (
   return fetch(`${config.API_URL}balanceSheets?marketId=${currentMarket?.id}`);
 };
 
-export const useBalanceSheetsDetailsQuery = (
-  currentMarket: IMarket | undefined,
-  queryKey: string[]
-) => {
-  return useQuery<IBalanceSheet[]>({
-    queryKey: queryKey,
+export const useBalanceSheetsDetailsQuery = (currentMarket: IMarket) => {
+  return useSuspenseQuery<IBalanceSheet[]>({
+    queryKey: ['sheets', currentMarket.id || ''],
     queryFn: () =>
       fetchBalanceSheets(currentMarket)
         .then(res => res.json())
@@ -41,8 +38,7 @@ export const useBalanceSheetsDetailsQuery = (
             (sheet: { id: string; marketId: string; date: string }) =>
               buildBalanceSheet(sheet.id, sheet.marketId, sheet.date)
           ) as IBalanceSheet[];
-        }),
-    enabled: !!currentMarket?.id
+        })
   });
 };
 

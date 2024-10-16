@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useSuspenseQuery, useMutation } from '@tanstack/react-query';
 import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
 
@@ -10,19 +10,17 @@ const fetchClients: (arg0: ICity | undefined) => Promise<Response> = async curre
 
 export const useClientsQuery = (
   currentCity: ICity | undefined,
-  queryKey: string[],
   onSuccess?: (res: IClient[]) => void
 ) => {
-  return useQuery<IClient[]>({
-    queryKey: queryKey,
+  return useSuspenseQuery<IClient[]>({
+    queryKey: ['clients', currentCity?.id || ''],
     queryFn: () =>
       fetchClients(currentCity)
         .then(res => res.json())
         .then(res => {
           res.length && onSuccess?.(res);
           return formatResponse(res) as IClient[];
-        }),
-    enabled: !!currentCity?.id
+        })
   });
 };
 

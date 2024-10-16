@@ -1,30 +1,32 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import Box from '@mui/material/Box';
 import { useQueryClient } from '@tanstack/react-query';
-import { IBalanceSheet } from 'types/types';
+import { IBalanceSheet, IMarket } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import { BalanceSheetModal } from 'components/Modals/BalanceSheetModal/BalanceSheetModal';
 import BalanceSheetCreationModal from 'components/Modals/BalanceSheetCreationModal';
 import { useBalanceSheetsDetailsQuery } from 'api/balanceSheets/hooks';
 import RootContainer from '../RootContainer/RootContainer';
+import RootContainerLoading from '../RootContainer/RootContainerLoading';
 import { useTranslation } from 'react-i18next';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
+import { ErrorBoundary } from 'react-error-boundary';
+
 import { BalanceSheetShortcut } from 'components';
 
 const NB_DISPLAYED_SHORTCUTS = 3;
 
-const BalanceSheets: React.FC = () => {
+interface BalanceSheetsSuspenseProps {
+  currentMarket: IMarket;
+}
+const BalanceSheetsSuspense: React.FC<BalanceSheetsSuspenseProps> = ({ currentMarket }) => {
   const queryClient = useQueryClient();
-  const { currentMarket } = useSelectedData();
   const { t } = useTranslation();
 
-  const { data: sheets = [] } = useBalanceSheetsDetailsQuery(currentMarket, [
-    'sheets',
-    currentMarket?.id || ''
-  ]);
+  const { data: sheets = [] } = useBalanceSheetsDetailsQuery(currentMarket);
 
   const [selectedSheet, setSelectedSheet] = React.useState<IBalanceSheet | undefined | null>();
   const handleClose = () => setSelectedSheet(null);
@@ -183,6 +185,21 @@ const BalanceSheets: React.FC = () => {
         }}
       />
     </RootContainer>
+  );
+};
+
+const BalanceSheets: React.FC = () => {
+  const { currentMarket } = useSelectedData();
+  const { t } = useTranslation();
+
+  return (
+    <React.Fragment>
+      <Suspense fallback={<RootContainerLoading title={t('page.balancesheet.title')} />}>
+        <ErrorBoundary fallback={<div>Something went wrong!</div>}>
+          {currentMarket && <BalanceSheetsSuspense currentMarket={currentMarket} />}
+        </ErrorBoundary>
+      </Suspense>
+    </React.Fragment>
   );
 };
 

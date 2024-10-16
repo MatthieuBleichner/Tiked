@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Box from '@mui/material/Box';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { IClient } from 'types/types';
+import { ICity, IClient } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Paper from '@mui/material/Paper';
 import ClientModal from 'components/Modals/ClientModal/ClientModal';
@@ -9,6 +9,8 @@ import { formatResponse, formatQueryData } from 'api/utils';
 import { config } from 'config';
 import { useClientsQuery, useClientMutation } from 'api/clients/hooks';
 import RootContainer from '../RootContainer/RootContainer';
+import RootContainerLoading from '../RootContainer/RootContainerLoading';
+
 import { useTranslation } from 'react-i18next';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -17,13 +19,17 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-const Clients: React.FC = () => {
+import { ErrorBoundary } from 'react-error-boundary';
+
+interface ClientsProps {
+  currentCity: ICity;
+}
+
+const ClientsSuspense: React.FC<ClientsProps> = ({ currentCity }) => {
   const { t } = useTranslation();
 
   const queryClient = useQueryClient();
-  const { currentCity } = useSelectedData();
-
-  const { data: clients = [] } = useClientsQuery(currentCity, ['clients', currentCity?.id || '']);
+  const { data: clients = [] } = useClientsQuery(currentCity);
 
   const onAddClients = (newClients: IClient[]) =>
     queryClient.setQueryData(['clients', currentCity?.id], [...clients, ...newClients]);
@@ -137,6 +143,21 @@ const Clients: React.FC = () => {
         />
       </Box>
     </RootContainer>
+  );
+};
+
+const Clients: React.FC = () => {
+  const { currentCity } = useSelectedData();
+  const { t } = useTranslation();
+
+  return (
+    <React.Fragment>
+      <Suspense fallback={<RootContainerLoading title={t('page.balancesheet.title')} />}>
+        <ErrorBoundary fallback={<div>Something went wrong!</div>}>
+          {currentCity && <ClientsSuspense currentCity={currentCity} />}
+        </ErrorBoundary>
+      </Suspense>
+    </React.Fragment>
   );
 };
 

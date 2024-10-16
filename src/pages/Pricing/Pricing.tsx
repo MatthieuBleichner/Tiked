@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Box from '@mui/material/Box';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Table from '@mui/material/Table';
@@ -10,11 +10,17 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { usePricingsQuery } from 'api/pricings/hooks';
 import RootContainer from '../RootContainer/RootContainer';
+import RootContainerLoading from '../RootContainer/RootContainerLoading';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
+import { ErrorBoundary } from 'react-error-boundary';
+import { IMarket } from 'types/types';
 
-const Pricing: React.FC = () => {
-  const { currentMarket } = useSelectedData();
+interface PricingProps {
+  currentMarket: IMarket;
+}
+
+const PricingSuspense: React.FC<PricingProps> = ({ currentMarket }) => {
   const { t } = useTranslation();
 
   const { data: pricings = [] } = usePricingsQuery(currentMarket);
@@ -55,6 +61,21 @@ const Pricing: React.FC = () => {
         </Box>
       </Box>
     </RootContainer>
+  );
+};
+
+const Pricing: React.FC = () => {
+  const { currentMarket } = useSelectedData();
+  const { t } = useTranslation();
+
+  return (
+    <React.Fragment>
+      <Suspense fallback={<RootContainerLoading title={t('page.balancesheet.title')} />}>
+        <ErrorBoundary fallback={<div>Something went wrong!</div>}>
+          {currentMarket && <PricingSuspense currentMarket={currentMarket} />}
+        </ErrorBoundary>
+      </Suspense>
+    </React.Fragment>
   );
 };
 

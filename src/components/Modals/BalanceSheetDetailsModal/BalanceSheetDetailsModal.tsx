@@ -79,13 +79,9 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
     setSelectedClientId(event.target.value);
   };
 
-  const { data: clients = [] } = useClientsQuery(
-    currentCity,
-    ['clients', currentCity?.id || ''],
-    res => {
-      res.length && setSelectedClientId(res[0].id);
-    }
-  );
+  const { data: clients = [] } = useClientsQuery(currentCity, res => {
+    res.length && setSelectedClientId(res[0].id);
+  });
 
   const [selectedPricingsIds, setSelectedPricingsIds] = React.useState<string[]>([]);
 
