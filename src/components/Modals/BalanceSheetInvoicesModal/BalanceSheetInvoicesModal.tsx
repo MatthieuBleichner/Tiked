@@ -20,11 +20,11 @@ import FormHelperText from '@mui/material/FormHelperText';
 import React, { useState } from 'react';
 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { IBalanceSheetDetails, IBalanceSheet, PaiementMethod } from 'types/types';
+import { IBalanceSheetInvoices, IBalanceSheet, PaiementMethod } from 'types/types';
 import useSelectedData from 'contexts/market/useSelectedData';
 import { useClientsQuery } from 'api/clients/hooks';
 import { usePricingsQuery } from 'api/pricings/hooks';
-import { useBalanceSheetDetailsMutation } from 'api/balanceSheetDetails/hooks';
+import { useBalanceSheetInvoicesMutation } from 'api/balanceSheetInvoices/hooks';
 import { styles } from './styles';
 import { useTranslation } from 'react-i18next';
 
@@ -39,11 +39,11 @@ const MenuProps = {
   }
 };
 
-interface BalanceSheetDetailsModalProps {
+interface BalanceSheetInvoicesModalProps {
   open: boolean;
   onClose: () => void;
   balanceSheet: IBalanceSheet;
-  onAddDetail: (arg0: IBalanceSheetDetails[]) => void;
+  onAddDetail: (arg0: IBalanceSheetInvoices[]) => void;
   invoiceId: number;
 }
 
@@ -55,7 +55,7 @@ enum fieldError {
 
 type errorfield = 'client' | 'total' | 'paiementType';
 
-const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
+const BalanceSheetInvoicesModal: React.FC<BalanceSheetInvoicesModalProps> = ({
   open,
   onClose,
   balanceSheet,
@@ -101,7 +101,7 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
     return acc + (pricing?.price || 0);
   }, 0);
 
-  const mutation = useBalanceSheetDetailsMutation({ onSuccess: data => onAddDetail(data) });
+  const mutation = useBalanceSheetInvoicesMutation({ onSuccess: data => onAddDetail(data) });
 
   const handleAddDetail = () => {
     if (
@@ -147,11 +147,11 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
           <Grid direction="column">
             <Box sx={styles.header}>
               <Typography variant="h5" color={'primary.main'} textAlign={'center'}>
-                {t('newDetailsModal.title')}
+                {t('newInvoiceModal.title')}
               </Typography>
             </Box>
             <Grid container direction="column" spacing={1} sx={{ marginTop: 1 }}>
-              <Divider>{t('newDetailsModal.client')}</Divider>
+              <Divider>{t('newInvoiceModal.client')}</Divider>
               <FormControl>
                 <InputLabel id="ville-select-label">Client</InputLabel>
                 <Select
@@ -160,7 +160,7 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
                   labelId="ville-select-label"
                   id="ville-select"
                   value={selectedClientId}
-                  label={t('newDetailsModal.input.city.label')}
+                  label={t('newInvoiceModal.input.city.label')}
                   onChange={handleClientChange}
                   sx={{
                     minWidth: 120
@@ -173,7 +173,7 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
                     ))}
                 </Select>
               </FormControl>
-              <Divider>{t('newDetailsModal.bill')}</Divider>
+              <Divider>{t('newInvoiceModal.bill')}</Divider>
               <Grid direction="row" sx={{ marginTop: 2 }}>
                 <FormControl sx={{ width: 300 }} error={errorMap.total !== null}>
                   <InputLabel id="pricings-multiple-checkbox-label">Tag</InputLabel>
@@ -184,7 +184,7 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
                     multiple
                     value={selectedPricingsIds}
                     onChange={handleChange}
-                    input={<OutlinedInput label={t('newDetailsModal.input.pricing.label')} />}
+                    input={<OutlinedInput label={t('newInvoiceModal.input.pricing.label')} />}
                     renderValue={selected =>
                       selected
                         .map(id => pricings.find(pricing => pricing.id === id)?.name || '')
@@ -203,7 +203,7 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
                 <TextField
                   disabled
                   id="outlined-number"
-                  label={t('newDetailsModal.input.pricing.price')}
+                  label={t('newInvoiceModal.input.pricing.price')}
                   variant="outlined"
                   value={total}
                   sx={{
@@ -221,7 +221,7 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
                     labelId="paiement-select-label"
                     id="paiement-select"
                     value={selectedPaiementMethod}
-                    label={t('newDetailsModal.input.paiementMethod.label')}
+                    label={t('newInvoiceModal.input.paiementMethod.label')}
                     onChange={event => setSelectedPaiementMethod(event.target.value)}
                     sx={{
                       minWidth: 120
@@ -261,4 +261,4 @@ const BalanceSheetDetailsModal: React.FC<BalanceSheetDetailsModalProps> = ({
   );
 };
 
-export default BalanceSheetDetailsModal;
+export default BalanceSheetInvoicesModal;

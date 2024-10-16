@@ -54,6 +54,12 @@ const ClientsSuspense: React.FC<ClientsProps> = ({ currentCity }) => {
     }
   }, [clients]);
 
+  useEffect(() => {
+    if (clients?.length) {
+      setSelectedClient(clients[0]);
+    }
+  }, [currentCity]);
+
   if (!currentCity) {
     return null;
   }

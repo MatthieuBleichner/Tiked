@@ -2,25 +2,25 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { config } from 'config';
 import { formatResponse, formatQueryData } from '../utils';
 
-import { IBalanceSheet, IBalanceSheetDetails } from 'types/types';
+import { IBalanceSheet, IBalanceSheetInvoices } from 'types/types';
 import { getBalanceSheetInvoicesQuery } from './helpers';
 
-export const useBalanceSheetDetailsQuery = (balanceSheet: IBalanceSheet) => {
-  return useQuery<IBalanceSheetDetails[]>({
+export const useBalanceSheetInvoicesQuery = (balanceSheet: IBalanceSheet) => {
+  return useQuery<IBalanceSheetInvoices[]>({
     ...getBalanceSheetInvoicesQuery(balanceSheet)
   });
 };
 
-interface useBalanceSheetDetailsMutationParams {
-  onSuccess?: (arg0: IBalanceSheetDetails[]) => void;
+interface useBalanceSheetInvoicesMutationParams {
+  onSuccess?: (arg0: IBalanceSheetInvoices[]) => void;
   onError?: (arg0: Error) => void;
 }
-export const useBalanceSheetDetailsMutation = ({
+export const useBalanceSheetInvoicesMutation = ({
   onSuccess,
   onError
-}: useBalanceSheetDetailsMutationParams) => {
+}: useBalanceSheetInvoicesMutationParams) => {
   return useMutation({
-    mutationFn: (newBalanceSheetDetail: IBalanceSheetDetails) => {
+    mutationFn: (newBalanceSheetDetail: IBalanceSheetInvoices) => {
       console.log('mutationFn', newBalanceSheetDetail);
       const requestOptions = {
         method: 'POST',
@@ -32,7 +32,7 @@ export const useBalanceSheetDetailsMutation = ({
         .then(response => formatResponse(response));
     },
     onSuccess: data => {
-      onSuccess?.(data as IBalanceSheetDetails[]);
+      onSuccess?.(data as IBalanceSheetInvoices[]);
     },
     onError: error => {
       onError?.(error);

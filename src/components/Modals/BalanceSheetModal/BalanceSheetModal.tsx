@@ -18,14 +18,14 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { IBalanceSheetDetails, IBalanceSheet, PaiementMethod } from 'types/types';
+import { IBalanceSheetInvoices, IBalanceSheet, PaiementMethod } from 'types/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import useSelectedData from 'contexts/market/useSelectedData';
-import BalanceSheetDetailsPDF from '../../PDF/BalanceSheetDetailsPDF';
+import BalanceSheetPDF from '../../PDF/BalanceSheetPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import BalanceSheetDetailsModal from '../BalanceSheetDetailsModal/BalanceSheetDetailsModal';
+import BalanceSheetInvoicesModal from '../BalanceSheetInvoicesModal/BalanceSheetInvoicesModal';
 import { useClientsQuery } from 'api/clients/hooks';
-import { getBalanceSheetInvoicesQuery } from 'api/balanceSheetDetails/helpers';
+import { getBalanceSheetInvoicesQuery } from 'api/balanceSheetInvoices/helpers';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -48,10 +48,10 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
 
   const queryClient = useQueryClient();
   const queryMetadata = getBalanceSheetInvoicesQuery(balanceSheet);
-  const { data: details = [] } = useQuery({ ...queryMetadata });
+  const { data: invoices = [] } = useQuery({ ...queryMetadata });
 
-  const onAddDetail = (detail: IBalanceSheetDetails[]) => {
-    queryClient.setQueryData(queryMetadata.queryKey, [...details, ...detail]);
+  const onAddDetail = (detail: IBalanceSheetInvoices[]) => {
+    queryClient.setQueryData(queryMetadata.queryKey, [...invoices, ...detail]);
   };
 
   const [inEditMode, setInEditMode] = useState(false);
@@ -59,15 +59,15 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
 
   const onEditButtonPress = () => setInEditMode(!inEditMode);
 
-  const totalRevenues = details?.reduce(
-    (acc, detail) => {
-      acc.total = acc.total + detail.total;
-      if (detail.paiementType === PaiementMethod.CASH) {
-        acc.cash = acc.cash + detail.total;
-      } else if (detail.paiementType === PaiementMethod.CB) {
-        acc.cb = acc.cb + detail.total;
-      } else if (detail.paiementType === PaiementMethod.CHECK) {
-        acc.check = acc.check + detail.total;
+  const totalRevenues = invoices?.reduce(
+    (acc, invoice) => {
+      acc.total = acc.total + invoice.total;
+      if (invoice.paiementType === PaiementMethod.CASH) {
+        acc.cash = acc.cash + invoice.total;
+      } else if (invoice.paiementType === PaiementMethod.CB) {
+        acc.cb = acc.cb + invoice.total;
+      } else if (invoice.paiementType === PaiementMethod.CHECK) {
+        acc.check = acc.check + invoice.total;
       }
 
       return acc;
@@ -100,14 +100,14 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               <EditIcon />
             </IconButton>
 
-            {currentMarket && balanceSheet && currentCity && details?.length > 0 ? (
+            {currentMarket && balanceSheet && currentCity && invoices?.length > 0 ? (
               <PDFDownloadLink
                 document={
-                  <BalanceSheetDetailsPDF
+                  <BalanceSheetPDF
                     currentMarket={currentMarket}
                     currentCity={currentCity}
                     balanceSheet={balanceSheet}
-                    balanceSheetDetails={details}
+                    invoices={invoices}
                     clients={clients}
                   />
                 }
@@ -191,23 +191,23 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                 </TableRow>
               </TableHead>
               <TableBody>
-                {details?.map(detail => {
-                  const client = clients.find(client => client.id === detail.clientId);
+                {invoices?.map(invoice => {
+                  const client = clients.find(client => client.id === invoice.clientId);
                   return (
                     <TableRow
-                      key={detail.id}
+                      key={invoice.id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                       <TableCell id={client?.id} component="th" scope="client" align="left">
                         {`${client?.firstName} ${client?.lastName}`}
                       </TableCell>
-                      <TableCell id={detail.id} component="th" scope="client" align="center">
-                        {`${detail?.paiementType}`}
+                      <TableCell id={invoice.id} component="th" scope="client" align="center">
+                        {`${invoice?.paiementType}`}
                       </TableCell>
-                      <TableCell id={detail.id} component="th" scope="client" align="center">
-                        {`${detail?.invoiceId}`}
+                      <TableCell id={invoice.id} component="th" scope="client" align="center">
+                        {`${invoice?.invoiceId}`}
                       </TableCell>
-                      <TableCell id={detail.id} component="th" scope="client" align="center">
-                        {`${detail?.total} €`}
+                      <TableCell id={invoice.id} component="th" scope="client" align="center">
+                        {`${invoice?.total} €`}
                       </TableCell>
                     </TableRow>
                   );
@@ -253,12 +253,12 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
           </TableContainer>
         </Box>
       </Dialog>
-      <BalanceSheetDetailsModal
+      <BalanceSheetInvoicesModal
         open={openModal}
         onClose={() => setOpenModal(false)}
         balanceSheet={balanceSheet}
         onAddDetail={onAddDetail}
-        invoiceId={details?.length + 1}
+        invoiceId={invoices?.length + 1}
       />
     </React.Fragment>
   );

@@ -44,7 +44,7 @@ export enum PaiementMethod {
   CHECK = 'check',
   CB = 'cb'
 }
-export interface IBalanceSheetDetails {
+export interface IBalanceSheetInvoices {
   id: string;
   balanceSheetId: string;
   clientId: string;

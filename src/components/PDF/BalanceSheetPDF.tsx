@@ -6,27 +6,27 @@ import logo from '../../../../../public/logo_sb_marche.png';
 import {
   IMarket,
   ICity,
-  IBalanceSheetDetails,
+  IBalanceSheetInvoices,
   IBalanceSheet,
   IClient,
   PaiementMethod
 } from 'types/types';
 
-interface BalanceSheetDetailsPDFProps {
+interface BalanceSheetPDFProps {
   currentMarket: IMarket;
   currentCity: ICity;
-  balanceSheetDetails: IBalanceSheetDetails[];
+  invoices: IBalanceSheetInvoices[];
   balanceSheet: IBalanceSheet;
   clients: IClient[];
 }
 
-const BalanceSheetDetailsPDF = ({
+const BalanceSheetPDF = ({
   currentMarket,
   currentCity,
-  balanceSheetDetails,
+  invoices,
   balanceSheet,
   clients
-}: BalanceSheetDetailsPDFProps) => {
+}: BalanceSheetPDFProps) => {
   const styles = StyleSheet.create({
     page: {
       fontSize: 11,
@@ -105,7 +105,7 @@ const BalanceSheetDetailsPDF = ({
     tbody2: { flex: 2, borderRightWidth: 1 }
   });
 
-  const totalRevenues = balanceSheetDetails?.reduce(
+  const totalRevenues = invoices?.reduce(
     (acc, detail) => {
       acc.total = acc.total + detail.total;
       if (detail.paiementType === PaiementMethod.CASH) {
@@ -184,10 +184,10 @@ const BalanceSheetDetailsPDF = ({
 
   const TableBody = () => (
     <Fragment>
-      {balanceSheetDetails.map(details => {
-        const client = clients.find(client => client.id === details.clientId);
+      {invoices.map(invoice => {
+        const client = clients.find(client => client.id === invoice.clientId);
         return (
-          <Fragment key={details.id}>
+          <Fragment key={invoice.id}>
             <View style={{ width: '100%', flexDirection: 'row' }}>
               <View style={[styles.tbody]}>
                 <Text>
@@ -195,13 +195,13 @@ const BalanceSheetDetailsPDF = ({
                 </Text>
               </View>
               <View style={styles.tbody}>
-                <Text>{details.invoiceId}</Text>
+                <Text>{invoice.invoiceId}</Text>
               </View>
               <View style={styles.tbody}>
-                <Text>{details.paiementType} </Text>
+                <Text>{invoice.paiementType} </Text>
               </View>
               <View style={styles.tbody}>
-                <Text>{details.total}</Text>
+                <Text>{invoice.total}</Text>
               </View>
             </View>
           </Fragment>
@@ -275,4 +275,4 @@ const BalanceSheetDetailsPDF = ({
     </Document>
   );
 };
-export default BalanceSheetDetailsPDF;
+export default BalanceSheetPDF;

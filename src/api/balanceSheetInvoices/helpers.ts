@@ -1,7 +1,7 @@
 import { config } from 'config';
 import { formatResponse } from '../utils';
 
-import { IBalanceSheet, IBalanceSheetDetails } from 'types/types';
+import { IBalanceSheet, IBalanceSheetInvoices } from 'types/types';
 
 const fetchBalanceSheetInvoices: (
   arg0: IBalanceSheet | undefined | null
@@ -15,12 +15,12 @@ const fetchBalanceSheetInvoices: (
 
 export const getBalanceSheetInvoicesQuery = (balanceSheet: IBalanceSheet) => {
   return {
-    queryKey: ['details', balanceSheet?.id || ''],
+    queryKey: ['invoices', balanceSheet?.id || ''],
     queryFn: () =>
       fetchBalanceSheetInvoices(balanceSheet)
         .then(res => res.json())
         .then(res => {
-          return formatResponse(res) as IBalanceSheetDetails[];
+          return formatResponse(res) as IBalanceSheetInvoices[];
         })
   };
 };
