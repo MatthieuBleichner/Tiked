@@ -1,5 +1,5 @@
 import { config } from 'config';
-import { formatResponse } from '../utils';
+import { formatResponse, formatQueryData } from '../utils';
 
 import { IBalanceSheet, IMarket } from 'types/types';
 
@@ -21,21 +21,30 @@ export const buildBalanceSheet: (arg0: string, arg1: string, arg2: string) => IB
   };
 };
 
-const fetchBalanceSheets: (
-  arg0: IMarket | undefined
-) => Promise<Response> = async currentMarket => {
-  return fetch(`${config.API_URL}balanceSheets?marketId=${currentMarket?.id}`);
+const fetchBalanceSheets: (arg0: IMarket | undefined, arg1: string) => Promise<Response> = async (
+  currentMarket,
+  date
+) => {
+  const dateQuery = date ? `&date=${date}` : '';
+  return fetch(`${config.API_URL}balanceSheets?marketId=${currentMarket?.id}${dateQuery}`);
 };
 
-export const getBalanceSheetQuery = (currentMarket: IMarket) => ({
-  queryKey: ['sheets', currentMarket.id || ''],
-  queryFn: () =>
-    fetchBalanceSheets(currentMarket)
-      .then(res => res.json())
-      .then(res => {
-        return (formatResponse(res) as IBalanceSheetResponse[]).map(
-          (sheet: { id: string; marketId: string; date: string }) =>
-            buildBalanceSheet(sheet.id, sheet.marketId, sheet.date)
-        ) as IBalanceSheet[];
-      })
-});
+export const getBalanceSheetQuery = (currentMarket: IMarket, date?: Date) => {
+  const formatedDate = formatQueryData(date);
+  return {
+    queryKey: ['sheets', currentMarket.id || '', formatedDate ?? ''],
+    queryFn: () =>
+      fetchBalanceSheets(currentMarket, formatedDate as string)
+        .then(res => res.json())
+        .then(res => {
+          return (formatResponse(res) as IBalanceSheetResponse[]).map(
+            (sheet: { id: string; marketId: string; date: string }) =>
+              buildBalanceSheet(sheet.id, sheet.marketId, sheet.date)
+          ) as IBalanceSheet[];
+        })
+        .catch(error => {
+          console.log('on error', error);
+          return [];
+        })
+  };
+};

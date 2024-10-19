@@ -253,13 +253,17 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
           </TableContainer>
         </Box>
       </Dialog>
-      <BalanceSheetInvoicesModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        balanceSheet={balanceSheet}
-        onAddDetail={onAddDetail}
-        invoiceId={invoices?.length + 1}
-      />
+      {currentCity && currentMarket && (
+        <BalanceSheetInvoicesModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          balanceSheet={balanceSheet}
+          onAddDetail={onAddDetail}
+          invoiceId={invoices?.length + 1}
+          currentCity={currentCity}
+          currentMarket={currentMarket}
+        />
+      )}
     </React.Fragment>
   );
 };

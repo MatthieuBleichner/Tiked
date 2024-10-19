@@ -17,11 +17,14 @@
     "newClientModal.input.lastname.siret": "Numéro de siret",
     "newInvoiceModal.title" : "Nouvelle Facture",
     "newInvoiceModal.client": "Client",
+    "newInvoiceModal.date" : "Date",
     "newInvoiceModal.input.city.label" :"Ville",
     "newInvoiceModal.bill": "Facture",
     "newInvoiceModal.input.pricing.label": "dépenses",
     "newInvoiceModal.input.pricing.price": "Prix €",
     "newInvoiceModal.input.paiementMethod.label": "moyen de paiement",
+    "newInvoiceModal.confirmTitle": "Attention",
+    "newInvoiceModal.confirmBody": "Il n'y a pas encore de bilan associé à cette date. Etes vous sûr de vouloir en créer un?",
     "page.balancesheet.title": "Bilan",
     "page.balancesheet.newBilan": "Nouveau bilan",
     "page.balancesheet.openOtherBalancesheet": "Ouvrir un autre bilan",
@@ -34,6 +37,8 @@
     "page.clients.table.header.firstName": "Prénom",
     "page.clients.table.header.lastName": "Prénom",
     "page.clients.table.header.siret": "Siret",
+    "page.invoice.title": "Facture",
+    "page.invoice.newInvoice": "Nouvelle facture",
     "page.pricings.title": "Tarifs"
 }
 

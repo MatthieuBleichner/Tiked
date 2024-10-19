@@ -8,6 +8,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Clients from '../../components/Clients/Clients';
 import Pricing from '../../components/Pricing/Pricing';
 import BalanceSheets from '../../components/Edition/BalanceSheets';
+import Invoice from '../../components/Invoice/Invoice';
+
 import { styles } from './styles';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -69,7 +71,9 @@ export default function Dashboard() {
                 </Box>
               </Grid>
               <Grid size={{ xs: 12, md: 6 }} sx={{ height: '50%' }}>
-                <Box sx={styles.card} />
+                <Box sx={styles.card}>
+                  <Invoice />
+                </Box>
               </Grid>
             </Grid>
           </Box>
