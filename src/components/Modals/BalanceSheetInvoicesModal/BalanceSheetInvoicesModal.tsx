@@ -1,21 +1,10 @@
 import Dialog from '@mui/material//Dialog';
 import DialogContent from '@mui/material//DialogContent';
 import { v6 as uuid } from 'uuid';
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Checkbox,
-  ListItemText,
-  OutlinedInput,
-  Button,
-  TextField,
-  Typography
-} from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Button, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import FormHelperText from '@mui/material/FormHelperText';
 
 import React, { useState, useMemo } from 'react';
 
@@ -33,20 +22,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import ConfirmationModal from '../ConfirmationModal';
-
+import PricingsSelector from './PricingsSelector';
 import { getBalanceSheetQuery } from 'api/balanceSheets/helpers';
 import { useBalanceSheetMutation } from 'api/balanceSheets/hooks';
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
 
 interface BalanceSheetInvoicesModalProps {
   open: boolean;
@@ -87,7 +65,7 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
 
   const balanceSheetDate = balanceSheet?.date ?? new Date();
 
-  const [selectedClientId, setSelectedClientId] = useState<string>();
+  const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [selectedPaiementMethod, setSelectedPaiementMethod] = useState<string>(PaiementMethod.CASH);
 
   const { data: pricings = [] } = usePricingsQuery(currentMarket);
@@ -124,26 +102,11 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
     res.length && setSelectedClientId(res[0].id);
   });
 
-  const [selectedPricingsIds, setSelectedPricingsIds] = React.useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof selectedPricingsIds>) => {
-    const {
-      target: { value }
-    } = event;
-    setSelectedPricingsIds(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    );
-  };
-
-  const total = selectedPricingsIds.reduce((acc, id) => {
-    const pricing = pricings.find(pricing => pricing.id === id);
-    return acc + (pricing?.price || 0);
-  }, 0);
-
   const invoicesMutation = useBalanceSheetInvoicesMutation({
     onSuccess: data => onAddDetail?.(data)
   });
+
+  const [total, setTotal] = useState(0);
 
   const newInvoicesMutation = (sheet: IBalanceSheet) => {
     if (selectedClientId === null || selectedClientId === undefined || selectedClientId === '')
@@ -215,7 +178,6 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
       return;
     }
     setConfirmationModalOpen(true);
-    console.log('No associateed balance sheet. Create it first');
   };
 
   const onValidateSheetAndInvoicesCreation = () => {
@@ -253,66 +215,31 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
             </React.Fragment>
           )}
           <Divider>{t('newInvoiceModal.client')}</Divider>
-          <FormControl>
-            <InputLabel id="ville-select-label">Client</InputLabel>
-            <Select
-              required
-              error={errorMap.client !== null}
-              labelId="ville-select-label"
-              id="ville-select"
-              value={selectedClientId}
-              label={t('newInvoiceModal.input.city.label')}
-              onChange={handleClientChange}
-              sx={{
-                minWidth: 120
-              }}>
-              {clients !== undefined &&
-                clients?.map(client => (
-                  <MenuItem key={client.id} value={client.id}>
-                    {`${client.firstName} ${client.lastName}`}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <Divider>{t('newInvoiceModal.bill')}</Divider>
-          <Grid direction="row" sx={{ marginTop: 2 }}>
-            <FormControl sx={{ width: 300 }} error={errorMap.total !== null}>
-              <InputLabel id="pricings-multiple-checkbox-label">Tag</InputLabel>
+          {selectedClientId && (
+            <FormControl>
+              <InputLabel id="ville-select-label">Client</InputLabel>
               <Select
                 required
-                labelId="pricings-multiple-checkbox-label"
-                id="pricings-multiple-checkbox"
-                multiple
-                value={selectedPricingsIds}
-                onChange={handleChange}
-                input={<OutlinedInput label={t('newInvoiceModal.input.pricing.label')} />}
-                renderValue={selected =>
-                  selected
-                    .map(id => pricings.find(pricing => pricing.id === id)?.name || '')
-                    .join(', ')
-                }
-                MenuProps={MenuProps}>
-                {pricings.map(pricing => (
-                  <MenuItem key={pricing.id} value={pricing.id} id={pricing.id}>
-                    <Checkbox checked={selectedPricingsIds.includes(pricing.id)} />
-                    <ListItemText primary={pricing.name} />
-                  </MenuItem>
-                ))}
+                error={errorMap.client !== null}
+                labelId="ville-select-label"
+                id="ville-select"
+                value={selectedClientId}
+                label={t('newInvoiceModal.input.city.label')}
+                onChange={handleClientChange}
+                sx={{
+                  minWidth: 120
+                }}>
+                {clients !== undefined &&
+                  clients?.map(client => (
+                    <MenuItem key={client.id} value={client.id}>
+                      {`${client.firstName} ${client.lastName}`}
+                    </MenuItem>
+                  ))}
               </Select>
-              {errorMap.total !== null && <FormHelperText>Error</FormHelperText>}
             </FormControl>
-            <TextField
-              disabled
-              id="outlined-number"
-              label={t('newInvoiceModal.input.pricing.price')}
-              variant="outlined"
-              value={total}
-              sx={{
-                marginLeft: 2,
-                width: 100
-              }}
-            />
-          </Grid>
+          )}
+          <Divider>{t('newInvoiceModal.bill')}</Divider>
+          <PricingsSelector pricings={pricings} onUpdateTotal={setTotal} />
           <Grid direction="row" sx={{ marginTop: 2 }}>
             <FormControl>
               <InputLabel id="paiement-select-label">Paiement method</InputLabel>

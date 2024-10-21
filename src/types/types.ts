@@ -26,11 +26,17 @@ export interface IClient {
   job?: string;
 }
 
+export enum DynamicUnit {
+  NONE = 'none',
+  METERS = 'meters',
+  HOURS = 'hours'
+}
 export interface IPricing {
   id: string;
   name: string;
   price: number;
   marketId: string;
+  dynamicUnit: DynamicUnit;
 }
 
 export interface IBalanceSheet {

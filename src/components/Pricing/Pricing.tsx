@@ -14,7 +14,7 @@ import RootContainerLoading from '../RootContainer/RootContainerLoading';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { ErrorBoundary } from 'react-error-boundary';
-import { IMarket } from 'types/types';
+import { DynamicUnit, IMarket } from 'types/types';
 
 interface PricingProps {
   currentMarket: IMarket;
@@ -43,18 +43,21 @@ const PricingSuspense: React.FC<PricingProps> = ({ currentMarket }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pricings?.map(pricing => (
-                  <TableRow
-                    key={pricing.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell component="th" scope="client" size="small">
-                      {pricing.name}
-                    </TableCell>
-                    <TableCell align="right" size="small">
-                      {pricing.price} €
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {pricings?.map(pricing => {
+                  console.log('pricing', pricing);
+                  return (
+                    <TableRow
+                      key={pricing.id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                      <TableCell component="th" scope="client" size="small">
+                        {pricing.name}
+                      </TableCell>
+                      <TableCell align="right" size="small">
+                        {pricing.price} €
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
