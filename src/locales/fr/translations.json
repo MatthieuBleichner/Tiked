@@ -25,6 +25,10 @@
     "newInvoiceModal.input.paiementMethod.label": "moyen de paiement",
     "newInvoiceModal.confirmTitle": "Attention",
     "newInvoiceModal.confirmBody": "Il n'y a pas encore de bilan associé à cette date. Etes vous sûr de vouloir en créer un?",
+    "newPricingModal.title": "Nouveau tarif",
+    "newPricingModal.input.name": "Nom",
+    "newPricingModal.input.dynamicValue.name": "Unité",
+    "newPricingModal.input.price": "Prix",
     "page.balancesheet.title": "Bilan",
     "page.balancesheet.newBilan": "Nouveau bilan",
     "page.balancesheet.openOtherBalancesheet": "Ouvrir un autre bilan",
@@ -39,6 +43,13 @@
     "page.clients.table.header.siret": "Siret",
     "page.invoice.title": "Facture",
     "page.invoice.newInvoice": "Nouvelle facture",
-    "page.pricings.title": "Tarifs"
+    "page.pricings.title": "Tarifs",
+    "page.pricings.newPricing": "Nouveau tarif",
+    "pricing.dynamicValue.none.label": "valeur fixe",
+    "pricing.dynamicValue.meters.label": "valeur en mètres",
+    "pricing.dynamicValue.hours.label": "valeur en heures",
+    "pricing.dynamicValue.meters.shortlabel": "m",
+    "pricing.dynamicValue.hours.shortLabel": "h"
+
 }
 

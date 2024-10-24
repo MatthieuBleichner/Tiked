@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import Box from '@mui/material/Box';
 import useSelectedData from 'contexts/market/useSelectedData';
 import Table from '@mui/material/Table';
@@ -8,13 +8,16 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { usePricingsQuery } from 'api/pricings/hooks';
+import { usePricingMutation } from 'api/pricings/hooks';
+import { getPricingsQuery } from 'api/pricings/helpers';
 import RootContainer from '../RootContainer/RootContainer';
 import RootContainerLoading from '../RootContainer/RootContainerLoading';
 import styles from './styles';
 import { useTranslation } from 'react-i18next';
 import { ErrorBoundary } from 'react-error-boundary';
-import { DynamicUnit, IMarket } from 'types/types';
+import { IMarket, IPricing } from 'types/types';
+import PricingModal from '../Modals/PricingModal/PricingModal';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 interface PricingProps {
   currentMarket: IMarket;
@@ -23,13 +26,34 @@ interface PricingProps {
 const PricingSuspense: React.FC<PricingProps> = ({ currentMarket }) => {
   const { t } = useTranslation();
 
-  const { data: pricings = [] } = usePricingsQuery(currentMarket);
+  const queryClient = useQueryClient();
+  const { queryKey, queryFn } = getPricingsQuery(currentMarket);
+  const { data: pricings = [] } = useSuspenseQuery<IPricing[]>({
+    queryKey,
+    queryFn
+  });
 
+  const onAddPricings = (newPricings: IPricing[]) =>
+    queryClient.setQueryData(queryKey, [...pricings, ...newPricings]);
+
+  const mutation = usePricingMutation({
+    onSuccess: data => onAddPricings(data)
+  });
+
+  const handleAddPricing = (pricing: IPricing) => {
+    mutation.mutate(pricing);
+  };
+
+  const [open, setIsOpened] = useState(false);
   if (!currentMarket) {
     return null;
   }
+
   return (
-    <RootContainer title={t('page.pricings.title')}>
+    <RootContainer
+      title={t('page.pricings.title')}
+      buttonText={t('page.pricings.newPricing')}
+      onClickButton={() => setIsOpened(true)}>
       <Box sx={styles.container}>
         <Box sx={styles.tableContainer}>
           <TableContainer component={Paper} sx={{ height: '100%' }}>
@@ -63,6 +87,12 @@ const PricingSuspense: React.FC<PricingProps> = ({ currentMarket }) => {
           </TableContainer>
         </Box>
       </Box>
+      <PricingModal
+        open={open}
+        onClose={() => setIsOpened(false)}
+        onPricingCreated={handleAddPricing}
+        currentMarket={currentMarket}
+      />
     </RootContainer>
   );
 };
