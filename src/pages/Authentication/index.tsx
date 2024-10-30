@@ -68,7 +68,7 @@ export default function Authentication() {
     }
 
     mutation.mutate({
-      email: mailRef?.current?.value,
+      id: mailRef?.current?.value,
       password: passwordRef?.current?.value
     });
   };

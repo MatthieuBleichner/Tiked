@@ -2,21 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 import { config } from 'config';
 
 interface authenticateParams {
-  email: string;
+  id: string;
   password: string;
 }
-
-export const fetchAuthenticate: ({
-  email,
-  password
-}: authenticateParams) => Promise<Response> = async ({ email, password }) => {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: password })
-  };
-  return fetch(`${config.API_URL}user/login?email=${email}`, requestOptions);
-};
 
 interface useAuthenticateMutationParams {
   onSuccess?: (arg0: string) => void;
@@ -25,13 +13,13 @@ interface useAuthenticateMutationParams {
 
 export const useAuthenticateMutation = ({ onSuccess, onError }: useAuthenticateMutationParams) => {
   return useMutation({
-    mutationFn: ({ email, password }: authenticateParams) => {
+    mutationFn: ({ id, password }: authenticateParams) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: password })
       };
-      return fetch(`${config.API_URL}/user/login?email=${email}`, requestOptions)
+      return fetch(`${config.API_URL}/user/login?id=${id}`, requestOptions)
         .then(response => {
           if (!response.ok) throw new Error(`${response.status}`);
           return response.json();
