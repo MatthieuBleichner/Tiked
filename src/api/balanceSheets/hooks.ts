@@ -4,6 +4,7 @@ import { formatResponse, formatQueryData } from '../utils';
 
 import { IBalanceSheet, IMarket } from 'types/types';
 import { getBalanceSheetQuery, buildBalanceSheet, IBalanceSheetResponse } from './helpers';
+import Cookies from 'js-cookie';
 
 export const useBalanceSheetsQuery = (currentMarket: IMarket) => {
   return useSuspenseQuery<IBalanceSheet[]>({
@@ -20,12 +21,13 @@ export const useBalanceSheetMutation = ({ onSuccess, onError }: useBalanceSheetM
   return useMutation({
     mutationFn: (newSheet: IBalanceSheet) => {
       const formatedSheet = formatQueryData(newSheet);
+      const token = Cookies.get('token');
       const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(formatQueryData(formatedSheet))
       };
-      return fetch(`${config.API_URL}balanceSheet?`, requestOptions)
+      return fetch(`${config.API_URL}/api/balanceSheet?`, requestOptions)
         .then(response => response.json())
         .then(response => {
           return (formatResponse(response) as IBalanceSheetResponse[]).map(

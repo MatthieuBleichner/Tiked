@@ -54,8 +54,6 @@ const PricingSelector: React.FC<PricingSelectorProps> = ({ pricings, onUpdateTot
     )
   );
 
-  console.log('dynamicValueState', dynamicValueState);
-
   const handleDynamicValueChange = ({ id, value }: { id: string; value: number }) => {
     setDynamicValueState({
       ...dynamicValueState,
@@ -69,13 +67,11 @@ const PricingSelector: React.FC<PricingSelectorProps> = ({ pricings, onUpdateTot
       return acc + (pricing?.price || 0);
     }, 0);
 
-    console.log('totalStandardPricing', totalStandardPricing);
     const totalDynamicValues = Object.values(dynamicValueState).reduce((acc, val) => {
       acc = !isNaN(val) ? acc + val : acc;
       return acc;
     }, 0);
 
-    console.log('totalDynamicValues', totalDynamicValues);
     return totalStandardPricing + totalDynamicValues;
   }, [checkedState, dynamicValueState]);
 

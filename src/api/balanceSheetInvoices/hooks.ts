@@ -4,6 +4,7 @@ import { formatResponse, formatQueryData } from '../utils';
 
 import { IBalanceSheet, IBalanceSheetInvoices } from 'types/types';
 import { getBalanceSheetInvoicesQuery } from './helpers';
+import Cookies from 'js-cookie';
 
 export const useBalanceSheetInvoicesQuery = (balanceSheet: IBalanceSheet) => {
   return useQuery<IBalanceSheetInvoices[]>({
@@ -21,13 +22,13 @@ export const useBalanceSheetInvoicesMutation = ({
 }: useBalanceSheetInvoicesMutationParams) => {
   return useMutation({
     mutationFn: (newBalanceSheetDetail: IBalanceSheetInvoices) => {
-      console.log('mutationFn', newBalanceSheetDetail);
+      const token = Cookies.get('token');
       const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(formatQueryData(newBalanceSheetDetail))
       };
-      return fetch(`${config.API_URL}invoice?`, requestOptions)
+      return fetch(`${config.API_URL}/api/invoice?`, requestOptions)
         .then(response => response.json())
         .then(response => formatResponse(response));
     },

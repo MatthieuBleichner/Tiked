@@ -1,7 +1,7 @@
 import { config } from 'config';
 import { formatResponse, formatQueryData } from '../utils';
-
 import { IBalanceSheet, IMarket } from 'types/types';
+import Cookies from 'js-cookie';
 
 export interface IBalanceSheetResponse {
   id: string;
@@ -26,7 +26,11 @@ const fetchBalanceSheets: (arg0: IMarket | undefined, arg1: string) => Promise<R
   date
 ) => {
   const dateQuery = date ? `&date=${date}` : '';
-  return fetch(`${config.API_URL}balanceSheets?marketId=${currentMarket?.id}${dateQuery}`);
+  const token = Cookies.get('token');
+  const headers = { Authorization: `Bearer ${token}` };
+  return fetch(`${config.API_URL}/api/balanceSheets?marketId=${currentMarket?.id}${dateQuery}`, {
+    headers
+  });
 };
 
 export const getBalanceSheetQuery = (currentMarket: IMarket, date?: Date) => {
@@ -42,8 +46,7 @@ export const getBalanceSheetQuery = (currentMarket: IMarket, date?: Date) => {
               buildBalanceSheet(sheet.id, sheet.marketId, sheet.date)
           ) as IBalanceSheet[];
         })
-        .catch(error => {
-          console.log('on error', error);
+        .catch(() => {
           return [];
         })
   };

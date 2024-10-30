@@ -3,8 +3,12 @@ import { config } from 'config';
 
 import { IClient, ICity } from 'types/types';
 
+import Cookies from 'js-cookie';
+
 const fetchClients: (arg0: ICity | undefined) => Promise<Response> = async currentCity => {
-  return fetch(`${config.API_URL}clients?cityId=${currentCity?.id}`);
+  const token = Cookies.get('token');
+  const headers = { 'Content-type': 'application/json', Authorization: `Bearer ${token}` };
+  return fetch(`${config.API_URL}/api/clients?cityId=${currentCity?.id}`, { headers });
 };
 
 export const getClientsQuery = (

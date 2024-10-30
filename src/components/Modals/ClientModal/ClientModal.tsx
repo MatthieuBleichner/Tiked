@@ -48,12 +48,6 @@ function ClientModal(props: ClientModalProps) {
   const { t } = useTranslation();
 
   const onValidate = () => {
-    console.log(
-      'client',
-      firstNameRef?.current?.value,
-      lastNameRef?.current?.value,
-      sirenRef?.current?.value
-    );
     if (
       firstNameRef?.current?.value === null ||
       firstNameRef?.current?.value === undefined ||

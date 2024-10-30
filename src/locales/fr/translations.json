@@ -1,4 +1,8 @@
 {
+    "authentication.title": "Connection",
+    "authentication.button.signin": "Se connecter",
+    "authentication.textfield.password": "Mot de passe",
+    "authentication.textfield.id": "Identifiant",
     "button.validate": "Valider",
     "button.cancel": "Annuler",
     "menu.clients": "Clients",

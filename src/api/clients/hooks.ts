@@ -4,6 +4,7 @@ import { config } from 'config';
 
 import { IClient, ICity } from 'types/types';
 import { getClientsQuery } from './helpers';
+import Cookies from 'js-cookie';
 
 export const useClientsQuery = (
   currentCity: ICity | undefined,
@@ -21,12 +22,13 @@ interface useClientMutationParams {
 export const useClientMutation = ({ onSuccess, onError }: useClientMutationParams) => {
   return useMutation({
     mutationFn: (newClient: IClient) => {
+      const token = Cookies.get('token');
       const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(formatQueryData(newClient))
       };
-      return fetch(`${config.API_URL}client?`, requestOptions)
+      return fetch(`${config.API_URL}/api/client?`, requestOptions)
         .then(response => response.json())
         .then(response => formatResponse(response));
     },

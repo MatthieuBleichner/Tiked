@@ -68,7 +68,6 @@ const PricingSuspense: React.FC<PricingProps> = ({ currentMarket }) => {
               </TableHead>
               <TableBody>
                 {pricings?.map(pricing => {
-                  console.log('pricing', pricing);
                   return (
                     <TableRow
                       key={pricing.id}
