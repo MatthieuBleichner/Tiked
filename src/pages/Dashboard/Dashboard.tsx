@@ -69,11 +69,9 @@ export default function Dashboard() {
               width: '100%',
               padding: { xs: 1, md: 2 },
               height: '76%'
-              //display: 'flex',
-              //flexGrow: 1
             }}>
             <Grid container spacing={2} sx={{ height: '100%', width: '100%', bgColor: 'red' }}>
-              <Grid size={{ xs: 12, md: 6 }} sx={{ height: { xs: '70%', md: '50%' } }}>
+              <Grid size={{ xs: 12, md: 6 }} sx={{ height: { md: '50%' }, flex: { xs: 1 } }}>
                 <Box sx={styles.card}>
                   <BalanceSheets />
                 </Box>

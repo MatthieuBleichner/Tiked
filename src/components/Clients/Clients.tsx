@@ -19,6 +19,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useMediaQuery } from '@mui/material';
 
 interface ClientsProps {
   currentCity: ICity;
@@ -26,6 +27,7 @@ interface ClientsProps {
 
 const ClientsSuspense: React.FC<ClientsProps> = ({ currentCity }) => {
   const { t } = useTranslation();
+  const isMobile = useMediaQuery(`(max-width: 760px)`);
 
   const queryClient = useQueryClient();
   const { queryKey, queryFn } = getClientsQuery(currentCity);
@@ -105,26 +107,28 @@ const ClientsSuspense: React.FC<ClientsProps> = ({ currentCity }) => {
             ))}
           </List>
         </Box>
-        <Box sx={{ width: { xs: '100%', md: '70%' }, height: '87%', padding: 2, paddingLeft: 4 }}>
-          <Typography color={'primary.main'} fontWeight={'fontWeightBold'} variant="h5">
-            {' '}
-            {`${selectedClient?.firstName} ${selectedClient?.lastName}`}{' '}
-          </Typography>
-          {selectedClient?.job && (
-            <Typography sx={{ paddingTop: 1 }} fontWeight={'fontWeightBold'}>
-              {selectedClient.job}
+        {!isMobile && (
+          <Box sx={{ width: { xs: '100%', md: '70%' }, height: '87%', padding: 2, paddingLeft: 4 }}>
+            <Typography color={'primary.main'} fontWeight={'fontWeightBold'} variant="h5">
+              {' '}
+              {`${selectedClient?.firstName} ${selectedClient?.lastName}`}{' '}
             </Typography>
-          )}
-          {selectedClient?.mail && (
-            <Typography sx={{ paddingTop: 1 }}>{selectedClient.mail}</Typography>
-          )}
-          {selectedClient?.address && (
-            <Typography sx={{ paddingTop: 1 }}>
-              {selectedClient.address} {selectedClient.postalCode} {selectedClient.city}
-            </Typography>
-          )}
-          <Typography sx={{ paddingTop: 1 }}>{`Siret: ${selectedClient?.siren}`}</Typography>
-        </Box>
+            {selectedClient?.job && (
+              <Typography sx={{ paddingTop: 1 }} fontWeight={'fontWeightBold'}>
+                {selectedClient.job}
+              </Typography>
+            )}
+            {selectedClient?.mail && (
+              <Typography sx={{ paddingTop: 1 }}>{selectedClient.mail}</Typography>
+            )}
+            {selectedClient?.address && (
+              <Typography sx={{ paddingTop: 1 }}>
+                {selectedClient.address} {selectedClient.postalCode} {selectedClient.city}
+              </Typography>
+            )}
+            <Typography sx={{ paddingTop: 1 }}>{`Siret: ${selectedClient?.siren}`}</Typography>
+          </Box>
+        )}
         <ClientModal
           open={open}
           onClose={() => setIsOpened(false)}

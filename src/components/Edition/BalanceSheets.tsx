@@ -16,6 +16,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { BalanceSheetShortcut } from 'components';
+import { styles } from './styles';
 
 const NB_DISPLAYED_SHORTCUTS = 3;
 
@@ -59,115 +60,70 @@ const BalanceSheetsSuspense: React.FC<BalanceSheetsSuspenseProps> = ({ currentMa
       onClickButton={() => setCreationModeIsOpened(true)}>
       <Box sx={{ width: '100%', height: '70%' }}>
         {sheets.length ? (
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              marginTop: 2
-            }}>
-            <Box
-              sx={{
-                flexDirection: { xs: 'column', md: 'row' },
-                display: 'flex',
-                width: '100%',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                height: '100%'
-              }}>
-              <Box
-                sx={{
-                  flexDirection: 'column',
-                  display: 'flex',
-                  width: { xs: '100%', md: '50%' },
-                  height: '100%',
-                  alignItems: 'flex-start',
-                  marginLeft: 2
-                }}>
-                <Box>{shortCutTranslations}</Box>
-                <Box
-                  sx={{
-                    flexDirection: 'column',
-                    display: 'flex',
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'flex-start',
-                    marginLeft: 2,
-                    marginTop: 1
-                  }}>
-                  {sheets.slice(0, NB_DISPLAYED_SHORTCUTS).map(sheet => (
-                    <BalanceSheetShortcut
-                      key={sheet.id}
-                      sheet={sheet}
-                      onClick={() => setSelectedSheet(sheet)}
-                    />
-                  ))}
+          <Box sx={styles.balanceSheetsContainer}>
+            <Box sx={styles.shortcutContainer}>
+              <Box>{shortCutTranslations}</Box>
+              <Box sx={styles.shortcuts}>
+                {sheets.slice(0, NB_DISPLAYED_SHORTCUTS).map(sheet => (
+                  <BalanceSheetShortcut
+                    key={sheet.id}
+                    sheet={sheet}
+                    onClick={() => setSelectedSheet(sheet)}
+                  />
+                ))}
+              </Box>
+            </Box>
+            {sheets.length > 2 && (
+              <Box sx={styles.sheetsDropboxContainer}>
+                {t('page.balancesheet.OtherSheets')}
+                <Box sx={styles.sheetsDropbox}>
+                  <Autocomplete
+                    id="balancehseetautocomplete"
+                    sx={{ width: { xs: '60%', md: '100%' } }}
+                    options={sheets}
+                    autoHighlight
+                    getOptionLabel={option =>
+                      option.date.toLocaleString('fr-FR', {
+                        weekday: 'long',
+                        month: 'long',
+                        year: 'numeric',
+                        day: 'numeric'
+                      })
+                    }
+                    renderOption={(props, option) => {
+                      const { ...optionProps } = props;
+                      return (
+                        <Box
+                          component="li"
+                          sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                          {...optionProps}
+                          key={option.id}>
+                          {option.date.toLocaleString('fr-FR', {
+                            weekday: 'long',
+                            month: 'long',
+                            year: 'numeric',
+                            day: 'numeric'
+                          })}
+                        </Box>
+                      );
+                    }}
+                    onChange={(e, value) => setSelectedSheet(value)}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        label={t('page.balancesheet.openOtherBalancesheet')}
+                        slotProps={{
+                          htmlInput: {
+                            ...params.inputProps,
+                            autoComplete: 'new-password' // disable autocomplete and autofill
+                          }
+                        }}
+                      />
+                    )}
+                  />
                 </Box>
               </Box>
-              {sheets.length > 2 && (
-                <Box
-                  sx={{
-                    width: { xs: '100%', md: '50%' },
-                    height: '100%',
-                    flexDirection: 'column',
-                    marginLeft: 2,
-                    marginTop: { xs: 3, md: 0 }
-                  }}>
-                  {t('page.balancesheet.OtherSheets')}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'flex-start',
-                      width: { xs: '100%', md: '50%' },
-                      marginTop: 1
-                    }}>
-                    <Autocomplete
-                      id="balancehseetautocomplete"
-                      sx={{ width: { xs: '60%', md: '100%' } }}
-                      options={sheets}
-                      autoHighlight
-                      getOptionLabel={option =>
-                        option.date.toLocaleString('fr-FR', {
-                          weekday: 'long',
-                          month: 'long',
-                          year: 'numeric',
-                          day: 'numeric'
-                        })
-                      }
-                      renderOption={(props, option) => {
-                        const { ...optionProps } = props;
-                        return (
-                          <Box
-                            component="li"
-                            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                            {...optionProps}
-                            key={option.id}>
-                            {option.date.toLocaleString('fr-FR', {
-                              weekday: 'long',
-                              month: 'long',
-                              year: 'numeric',
-                              day: 'numeric'
-                            })}
-                          </Box>
-                        );
-                      }}
-                      onChange={(e, value) => setSelectedSheet(value)}
-                      renderInput={params => (
-                        <TextField
-                          {...params}
-                          label={t('page.balancesheet.openOtherBalancesheet')}
-                          slotProps={{
-                            htmlInput: {
-                              ...params.inputProps,
-                              autoComplete: 'new-password' // disable autocomplete and autofill
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                  </Box>
-                </Box>
-              )}
-            </Box>
+            )}
           </Box>
         ) : (
           <React.Fragment>{'Pas de bilan pour ce marché'}</React.Fragment>

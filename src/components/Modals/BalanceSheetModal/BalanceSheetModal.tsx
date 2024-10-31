@@ -74,15 +74,16 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
     },
     { total: 0, cash: 0, check: 0, cb: 0 }
   );
+
   return (
-    <React.Fragment>
+    <Box sx={{ width: '100%', height: '100%' }}>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
-            <Box
+            {/* <Box
               sx={{
                 display: 'flex',
                 flex: 1,
@@ -94,55 +95,60 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               <Typography variant="h4" noWrap component="div">
                 {currentMarket?.name + ' - ' + currentCity?.name}
               </Typography>
-            </Box>
+            </Box> */}
 
-            <IconButton edge="start" color="inherit" onClick={onEditButtonPress} aria-label="edit">
-              <EditIcon />
-            </IconButton>
+            <Box sx={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={onEditButtonPress}
+                aria-label="edit">
+                <EditIcon />
+              </IconButton>
 
-            {currentMarket && balanceSheet && currentCity && invoices?.length > 0 ? (
-              <PDFDownloadLink
-                document={
-                  <BalanceSheetPDF
-                    currentMarket={currentMarket}
-                    currentCity={currentCity}
-                    balanceSheet={balanceSheet}
-                    invoices={invoices}
-                    clients={clients}
-                  />
-                }
-                fileName={`${currentCity.name}-${currentMarket.name}-${balanceSheet?.date.toLocaleDateString(
-                  'fr-FR',
-                  {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric'
+              {currentMarket && balanceSheet && currentCity && invoices?.length > 0 ? (
+                <PDFDownloadLink
+                  document={
+                    <BalanceSheetPDF
+                      currentMarket={currentMarket}
+                      currentCity={currentCity}
+                      balanceSheet={balanceSheet}
+                      invoices={invoices}
+                      clients={clients}
+                    />
                   }
-                )}`}>
-                <IconButton
-                  edge="start"
-                  color="inherit"
-                  onClick={onEditButtonPress}
-                  aria-label="edit"
-                  sx={{ color: '#FFFFFF' }}>
-                  <DownloadIcon />
-                </IconButton>
-              </PDFDownloadLink>
-            ) : (
-              <></>
-            )}
+                  fileName={`${currentCity.name}-${currentMarket.name}-${balanceSheet?.date.toLocaleDateString(
+                    'fr-FR',
+                    {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric'
+                    }
+                  )}`}>
+                  <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={onEditButtonPress}
+                    aria-label="edit"
+                    sx={{ color: '#FFFFFF', marginLeft: { sx: 1, md: 2 } }}>
+                    <DownloadIcon />
+                  </IconButton>
+                </PDFDownloadLink>
+              ) : (
+                <></>
+              )}
+            </Box>
           </Toolbar>
         </AppBar>
         <Box
           sx={{
             display: 'flex',
-            //flex: 1,
-            width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '15%'
+            height: '15%',
+            flexDirection: 'column'
           }}>
-          <Typography variant="h4" noWrap component="div">
+          <Typography variant="h4" component="div" align="center">
             {'Bilan du ' +
               balanceSheet?.date.toLocaleString('fr-FR', { weekday: 'long' }) +
               ' ' +
@@ -174,7 +180,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
             flexDirection: 'column',
             alignItems: 'center'
           }}>
-          <TableContainer component={Paper} sx={{ width: '50%' }}>
+          <TableContainer component={Paper} sx={{ width: { xs: '90%', md: '50%' } }}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -203,7 +209,12 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                       <TableCell id={invoice.id} component="th" scope="client" align="center">
                         {`${invoice?.paiementType}`}
                       </TableCell>
-                      <TableCell id={invoice.id} component="th" scope="client" align="center">
+                      <TableCell
+                        id={invoice.id}
+                        component="th"
+                        scope="client"
+                        align="center"
+                        sx={{ maxWidth: { xs: 50 } }}>
                         {`${invoice?.invoiceId}`}
                       </TableCell>
                       <TableCell id={invoice.id} component="th" scope="client" align="center">
@@ -215,11 +226,11 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               </TableBody>
             </Table>
           </TableContainer>
-          <TableContainer component={Paper} sx={{ width: '25%', marginTop: 2 }}>
+          <TableContainer component={Paper} sx={{ width: { xs: '60%', md: '25%' }, marginTop: 2 }}>
             <Table aria-label="simple table" size="small">
               <TableBody>
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client" align="left" sx={{ width: '75%' }}>
+                  <TableCell component="th" scope="client" align="left" sx={{ width: '65%' }}>
                     Total Cash
                   </TableCell>
                   <TableCell component="th" scope="client" align="center">
@@ -227,7 +238,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                   </TableCell>
                 </TableRow>
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client" align="left" sx={{ width: '75%' }}>
+                  <TableCell component="th" scope="client" align="left" sx={{ width: '65%' }}>
                     Total CB
                   </TableCell>
                   <TableCell component="th" scope="client" align="center">
@@ -235,7 +246,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                   </TableCell>
                 </TableRow>
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="client" align="left" sx={{ width: '75%' }}>
+                  <TableCell component="th" scope="client" align="left" sx={{ width: '65%' }}>
                     Total Cheque
                   </TableCell>
                   <TableCell component="th" scope="client" align="center">
@@ -243,7 +254,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell align="left" sx={{ width: '75%' }}>
+                  <TableCell align="left" sx={{ width: '65%' }}>
                     Total
                   </TableCell>
                   <TableCell align="center">{`${totalRevenues.total} €`}</TableCell>
@@ -264,6 +275,6 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
           currentMarket={currentMarket}
         />
       )}
-    </React.Fragment>
+    </Box>
   );
 };
