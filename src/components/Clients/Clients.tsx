@@ -70,72 +70,77 @@ const ClientsSuspense: React.FC<ClientsProps> = ({ currentCity }) => {
       title={t('page.clients.title')}
       buttonText={t('page.clients.newClient')}
       onClickButton={() => setIsOpened(true)}>
-      <Box
-        sx={{
-          flex: 1,
-          borderRadius: 5,
-          height: '80%',
-          padding: 2,
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' }
-        }}>
+      {clients?.length ? (
         <Box
           sx={{
+            flex: 1,
+            borderRadius: 5,
+            height: '80%',
+            padding: 2,
             display: 'flex',
-            justifyContent: 'flex-start',
-            width: { xs: '100%', md: '30%' },
-            height: '85%',
-            zIndex: 5
+            flexDirection: { xs: 'column', md: 'row' }
           }}>
-          <List sx={{ maxHeight: '100%', overflow: 'auto', width: '100%' }} component={Paper}>
-            {clients?.map(client => (
-              <React.Fragment key={client.id}>
-                <ListItem disablePadding key={client.id}>
-                  <ListItemButton
-                    component="a"
-                    href="#simple-list"
-                    selected={client.id === selectedClient?.id}
-                    onClick={() => setSelectedClient(client)}>
-                    <ListItemText
-                      sx={{ color: 'primary.main' }}
-                      primary={`${client.firstName} ${client.lastName}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-                <Divider />
-              </React.Fragment>
-            ))}
-          </List>
-        </Box>
-        {!isMobile && (
-          <Box sx={{ width: { xs: '100%', md: '70%' }, height: '87%', padding: 2, paddingLeft: 4 }}>
-            <Typography color={'primary.main'} fontWeight={'fontWeightBold'} variant="h5">
-              {' '}
-              {`${selectedClient?.firstName} ${selectedClient?.lastName}`}{' '}
-            </Typography>
-            {selectedClient?.job && (
-              <Typography sx={{ paddingTop: 1 }} fontWeight={'fontWeightBold'}>
-                {selectedClient.job}
-              </Typography>
-            )}
-            {selectedClient?.mail && (
-              <Typography sx={{ paddingTop: 1 }}>{selectedClient.mail}</Typography>
-            )}
-            {selectedClient?.address && (
-              <Typography sx={{ paddingTop: 1 }}>
-                {selectedClient.address} {selectedClient.postalCode} {selectedClient.city}
-              </Typography>
-            )}
-            <Typography sx={{ paddingTop: 1 }}>{`Siret: ${selectedClient?.siren}`}</Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              width: { xs: '100%', md: '30%' },
+              height: '85%',
+              zIndex: 5
+            }}>
+            <List sx={{ maxHeight: '100%', overflow: 'auto', width: '100%' }} component={Paper}>
+              {clients?.map(client => (
+                <React.Fragment key={client.id}>
+                  <ListItem disablePadding key={client.id}>
+                    <ListItemButton
+                      component="a"
+                      href="#simple-list"
+                      selected={client.id === selectedClient?.id}
+                      onClick={() => setSelectedClient(client)}>
+                      <ListItemText
+                        sx={{ color: 'primary.main' }}
+                        primary={`${client.firstName} ${client.lastName}`}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))}
+            </List>
           </Box>
-        )}
-        <ClientModal
-          open={open}
-          onClose={() => setIsOpened(false)}
-          onClientCreated={handleAddClient}
-          city={currentCity}
-        />
-      </Box>
+          {!isMobile && (
+            <Box
+              sx={{ width: { xs: '100%', md: '70%' }, height: '87%', padding: 2, paddingLeft: 4 }}>
+              <Typography color={'primary.main'} fontWeight={'fontWeightBold'} variant="h5">
+                {' '}
+                {`${selectedClient?.firstName} ${selectedClient?.lastName}`}{' '}
+              </Typography>
+              {selectedClient?.job && (
+                <Typography sx={{ paddingTop: 1 }} fontWeight={'fontWeightBold'}>
+                  {selectedClient.job}
+                </Typography>
+              )}
+              {selectedClient?.mail && (
+                <Typography sx={{ paddingTop: 1 }}>{selectedClient.mail}</Typography>
+              )}
+              {selectedClient?.address && (
+                <Typography sx={{ paddingTop: 1 }}>
+                  {selectedClient.address} {selectedClient.postalCode} {selectedClient.city}
+                </Typography>
+              )}
+              <Typography sx={{ paddingTop: 1 }}>{`Siret: ${selectedClient?.siren}`}</Typography>
+            </Box>
+          )}
+        </Box>
+      ) : (
+        <React.Fragment>{'Pas de clients pour ce marché'}</React.Fragment>
+      )}
+      <ClientModal
+        open={open}
+        onClose={() => setIsOpened(false)}
+        onClientCreated={handleAddClient}
+        city={currentCity}
+      />
     </RootContainer>
   );
 };

@@ -54,10 +54,10 @@ function ClientModal(props: ClientModalProps) {
       firstNameRef?.current?.value === '' ||
       lastNameRef?.current?.value === null ||
       lastNameRef?.current?.value === undefined ||
-      lastNameRef?.current?.value === '' ||
-      sirenRef?.current?.value === null ||
-      sirenRef?.current?.value === undefined ||
-      sirenRef?.current?.value === ''
+      lastNameRef?.current?.value === ''
+      // sirenRef?.current?.value === null ||
+      // sirenRef?.current?.value === undefined ||
+      // sirenRef?.current?.value === ''
     ) {
       setErrorMap({
         firstName: firstNameRef?.current?.value ? null : fieldError.EMPTY,
@@ -69,7 +69,7 @@ function ClientModal(props: ClientModalProps) {
     onClientCreated({
       firstName: firstNameRef.current.value,
       lastName: lastNameRef.current.value,
-      siren: sirenRef.current.value,
+      siren: sirenRef.current?.value ?? '111111111',
       id: uuid(),
       cityId: city.id,
       postalCode: postalCodeRef.current?.valueAsNumber,
@@ -178,6 +178,7 @@ function ClientModal(props: ClientModalProps) {
                   variant="outlined"
                   label={t('newClientModal.input.lastname.siret')}
                   id="siren"
+                  value="111111111"
                   inputRef={sirenRef}
                   error={errorMap.siret !== null}
                   helperText={errorMap.siret === fieldError.EMPTY ? 'Incorrect entry.' : ''}
