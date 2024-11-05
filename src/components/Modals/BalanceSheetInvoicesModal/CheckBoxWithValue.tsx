@@ -18,7 +18,10 @@ const CheckBoxWithValue: React.FC<CheckBoxWithValueProps> = ({ pricing, onChange
   };
 
   const handleTextfieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.({ id: pricing.id, value: event.target.valueAsNumber * pricing.price });
+    onChange?.({
+      id: pricing.id,
+      value: Math.round(event.target.valueAsNumber * pricing.price * 100) / 100
+    });
   };
 
   return (
