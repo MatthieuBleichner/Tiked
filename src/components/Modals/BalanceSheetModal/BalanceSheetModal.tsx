@@ -26,6 +26,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import BalanceSheetInvoicesModal from '../BalanceSheetInvoicesModal/BalanceSheetInvoicesModal';
 import { useClientsQuery } from 'api/clients/hooks';
 import { getBalanceSheetInvoicesQuery } from 'api/balanceSheetInvoices/helpers';
+import { usePaiementMethodTranslation } from 'hooks/usePaiementMethodTranslation';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -43,6 +44,7 @@ interface BalanceSheetModalProps {
 }
 export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSheetModalProps) => {
   const { currentCity, currentMarket } = useSelectedData();
+  const translatePaiementMethod = usePaiementMethodTranslation();
 
   const { data: clients = [] } = useClientsQuery(currentCity);
 
@@ -207,7 +209,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                         {`${client?.firstName} ${client?.lastName}`}
                       </TableCell>
                       <TableCell id={invoice.id} component="th" scope="client" align="center">
-                        {`${invoice?.paiementType}`}
+                        {translatePaiementMethod(invoice?.paiementType)}
                       </TableCell>
                       <TableCell
                         id={invoice.id}
@@ -231,7 +233,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
               <TableBody>
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell component="th" scope="client" align="left" sx={{ width: '65%' }}>
-                    Total Cash
+                    Total Espèces
                   </TableCell>
                   <TableCell component="th" scope="client" align="center">
                     {`${totalRevenues.cash} €`}
@@ -247,7 +249,7 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
                 </TableRow>
                 <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell component="th" scope="client" align="left" sx={{ width: '65%' }}>
-                    Total Cheque
+                    Total Chèque
                   </TableCell>
                   <TableCell component="th" scope="client" align="center">
                     {`${totalRevenues.check} €`}

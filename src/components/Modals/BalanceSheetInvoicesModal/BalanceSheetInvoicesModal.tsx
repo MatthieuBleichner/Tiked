@@ -25,6 +25,7 @@ import ConfirmationModal from '../ConfirmationModal';
 import PricingsSelector from './PricingsSelector';
 import { getBalanceSheetQuery } from 'api/balanceSheets/helpers';
 import { useBalanceSheetMutation } from 'api/balanceSheets/hooks';
+import { usePaiementMethodTranslation } from 'hooks/usePaiementMethodTranslation';
 
 interface BalanceSheetInvoicesModalProps {
   open: boolean;
@@ -63,6 +64,7 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
 }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const translatePaiementMethod = usePaiementMethodTranslation();
 
   const balanceSheetDate = balanceSheet?.date ?? new Date();
 
@@ -246,7 +248,9 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
           <PricingsSelector pricings={pricings} onUpdateTotal={setTotal} />
           <Grid direction="row" sx={{ marginTop: 2 }}>
             <FormControl>
-              <InputLabel id="paiement-select-label">Paiement method</InputLabel>
+              <InputLabel id="paiement-select-label">
+                {t('newInvoiceModal.input.paiementMethod.label')}
+              </InputLabel>
               <Select
                 required
                 error={errorMap.paiementType !== null}
@@ -263,7 +267,7 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
                     key={paiementMethodValue}
                     value={paiementMethodValue}
                     id={paiementMethodValue}>
-                    {paiementMethodValue}
+                    {translatePaiementMethod(paiementMethodValue)}
                   </MenuItem>
                 ))}
               </Select>

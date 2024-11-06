@@ -11,6 +11,7 @@ import {
   IClient,
   PaiementMethod
 } from 'types/types';
+import { usePaiementMethodTranslation } from 'hooks/usePaiementMethodTranslation';
 
 interface BalanceSheetPDFProps {
   currentMarket: IMarket;
@@ -86,7 +87,7 @@ const BalanceSheetPDF = ({
     tbody: {
       fontSize: 9,
       paddingTop: 4,
-      paddingLeft: 7,
+      //paddingLeft: 7,
       flex: 1,
       borderColor: 'whitesmoke',
       borderRightWidth: 1,
@@ -182,33 +183,36 @@ const BalanceSheetPDF = ({
     </View>
   );
 
-  const TableBody = () => (
-    <Fragment>
-      {invoices.map(invoice => {
-        const client = clients.find(client => client.id === invoice.clientId);
-        return (
-          <Fragment key={invoice.id}>
-            <View style={{ width: '100%', flexDirection: 'row' }}>
-              <View style={[styles.tbody]}>
-                <Text>
-                  {client?.firstName} {client?.lastName}
-                </Text>
+  const TableBody = () => {
+    const translatePaiementMethod = usePaiementMethodTranslation();
+    return (
+      <Fragment>
+        {invoices.map(invoice => {
+          const client = clients.find(client => client.id === invoice.clientId);
+          return (
+            <Fragment key={invoice.id}>
+              <View style={{ width: '100%', flexDirection: 'row' }}>
+                <View style={[styles.tbody]}>
+                  <Text>
+                    {client?.firstName} {client?.lastName}
+                  </Text>
+                </View>
+                <View style={styles.tbody}>
+                  <Text>{invoice.invoiceId}</Text>
+                </View>
+                <View style={styles.tbody}>
+                  <Text>{translatePaiementMethod(invoice.paiementType)} </Text>
+                </View>
+                <View style={styles.tbody}>
+                  <Text>{invoice.total}</Text>
+                </View>
               </View>
-              <View style={styles.tbody}>
-                <Text>{invoice.invoiceId}</Text>
-              </View>
-              <View style={styles.tbody}>
-                <Text>{invoice.paiementType} </Text>
-              </View>
-              <View style={styles.tbody}>
-                <Text>{invoice.total}</Text>
-              </View>
-            </View>
-          </Fragment>
-        );
-      })}
-    </Fragment>
-  );
+            </Fragment>
+          );
+        })}
+      </Fragment>
+    );
+  };
 
   const TableTotal: React.FC<{ paiementMethod?: PaiementMethod; value: number }> = ({
     paiementMethod,
@@ -216,7 +220,7 @@ const BalanceSheetPDF = ({
   }) => {
     let translation = 'Total';
     if (paiementMethod === PaiementMethod.CASH) {
-      translation = 'Total cash';
+      translation = 'Total espèces';
     } else if (paiementMethod === PaiementMethod.CHECK) {
       translation = 'Total chèque';
     } else if (paiementMethod === PaiementMethod.CB) {
@@ -225,10 +229,10 @@ const BalanceSheetPDF = ({
     return (
       <View style={{ width: '100%', flexDirection: 'row' }}>
         <View style={styles.total}>
-          <Text></Text>
+          <Text />
         </View>
         <View style={styles.total}>
-          <Text> </Text>
+          <Text />
         </View>
         <View style={styles.tbody}>
           <Text>{translation}</Text>
@@ -244,16 +248,16 @@ const BalanceSheetPDF = ({
     return (
       <View style={{ width: '100%', flexDirection: 'row' }}>
         <View style={styles.total}>
-          <Text></Text>
+          <Text />
         </View>
         <View style={styles.total}>
-          <Text> </Text>
+          <Text />
         </View>
         <View style={styles.total}>
-          <Text> </Text>
+          <Text />
         </View>
         <View style={styles.total}>
-          <Text> </Text>
+          <Text />
         </View>
       </View>
     );
