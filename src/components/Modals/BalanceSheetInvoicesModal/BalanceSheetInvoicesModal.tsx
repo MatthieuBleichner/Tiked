@@ -11,7 +11,7 @@ import React, { useState, useMemo } from 'react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { IBalanceSheetInvoices, IBalanceSheet, PaiementMethod, IMarket, ICity } from 'types/types';
 import { useClientsQuery } from 'api/clients/hooks';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePricingsQuery } from 'api/pricings/hooks';
 import { useBalanceSheetInvoicesMutation } from 'api/balanceSheetInvoices/hooks';
 import { getBalanceSheetInvoicesQuery } from 'api/balanceSheetInvoices/helpers';
@@ -62,6 +62,7 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
   currentCity
 }) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const balanceSheetDate = balanceSheet?.date ?? new Date();
 
@@ -77,6 +78,8 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
   });
 
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
+
+  const allBalanceSheetsQuery = getBalanceSheetQuery(currentMarket);
 
   // if no balance sheet defined - try to find an exisiting one corresponding to the date
   const { data: sheets = [] } = useQuery<IBalanceSheet[]>({
@@ -134,6 +137,7 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
   const sheetMutation = useBalanceSheetMutation({
     onSuccess: data => {
       if (!data.length) return;
+      queryClient.invalidateQueries({ queryKey: allBalanceSheetsQuery.queryKey });
       newInvoicesMutation(data[0]);
     }
   });
