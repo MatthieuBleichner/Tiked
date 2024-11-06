@@ -68,7 +68,7 @@ const PricingSelector: React.FC<PricingSelectorProps> = ({ pricings, onUpdateTot
     }, 0);
 
     const totalDynamicValues = Object.values(dynamicValueState).reduce((acc, val) => {
-      acc = !isNaN(val) ? acc + val : acc;
+      acc = !isNaN(val) ? Math.round((acc + val) * 100) / 100 : acc;
       return acc;
     }, 0);
 
