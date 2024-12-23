@@ -58,3 +58,6 @@ export interface IBalanceSheetInvoices {
   paiementType: PaiementMethod;
   invoiceId: string;
 }
+
+export type APIIBalanceSheetInvoices = Omit<IBalanceSheetInvoices, 'id' | 'invoiceId'> &
+  Partial<Pick<IBalanceSheetInvoices, 'id' | 'invoiceId'>>;

@@ -1,6 +1,5 @@
 import Dialog from '@mui/material//Dialog';
 import DialogContent from '@mui/material//DialogContent';
-import { v6 as uuid } from 'uuid';
 import { FormControl, InputLabel, MenuItem, Button, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
@@ -14,7 +13,6 @@ import { useClientsQuery } from 'api/clients/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePricingsQuery } from 'api/pricings/hooks';
 import { useBalanceSheetInvoicesMutation } from 'api/balanceSheetInvoices/hooks';
-import { getBalanceSheetInvoicesQuery } from 'api/balanceSheetInvoices/helpers';
 import { styles } from './styles';
 import { useTranslation } from 'react-i18next';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -32,7 +30,6 @@ interface BalanceSheetInvoicesModalProps {
   onClose: () => void;
   balanceSheet?: IBalanceSheet; // balance sheet can be undefined when creating invoices on the fly
   onAddDetail?: (arg0: IBalanceSheetInvoices[]) => void;
-  invoiceId?: number;
   currentMarket: IMarket;
   currentCity: ICity;
 }
@@ -49,7 +46,6 @@ interface BalanceSheetInvoicesModalSuspenseProps {
   onClose: () => void;
   balanceSheet?: IBalanceSheet; // balance sheet can be undefined when creating invoices on the fly
   onAddDetail?: (arg0: IBalanceSheetInvoices[]) => void;
-  invoiceId?: number;
   currentMarket: IMarket;
   currentCity: ICity;
 }
@@ -58,15 +54,12 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
   onClose,
   balanceSheet,
   onAddDetail,
-  invoiceId,
   currentMarket,
   currentCity
 }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const translatePaiementMethod = usePaiementMethodTranslation();
-
-  const balanceSheetDate = balanceSheet?.date ?? new Date();
 
   const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [selectedPaiementMethod, setSelectedPaiementMethod] = useState<string>(PaiementMethod.CASH);
@@ -87,12 +80,6 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
   const { data: sheets = [] } = useQuery<IBalanceSheet[]>({
     ...getBalanceSheetQuery(currentMarket, new Date(selectedDate?.toString())),
     enabled: currentMarket && !balanceSheet
-  });
-
-  // if no balance sheet defined - retrieve all invoinces link to the retrieved sheet. This will be usefull to build invoide id
-  const { data: exisitingInvoices } = useQuery<IBalanceSheetInvoices[]>({
-    ...getBalanceSheetInvoicesQuery(sheets[0]),
-    enabled: !invoiceId && !balanceSheet && !!sheets?.length && !!sheets[0]
   });
 
   const currentSheet = useMemo(() => {
@@ -117,22 +104,11 @@ const BalanceSheetInvoicesModalSuspense: React.FC<BalanceSheetInvoicesModalSuspe
     if (selectedClientId === null || selectedClientId === undefined || selectedClientId === '')
       return;
 
-    const newInvoiceId = invoiceId ?? (exisitingInvoices && exisitingInvoices?.length + 1) ?? 1;
-
-    const currentCityPrefix = ('00' + currentCity?.invoicePrefix).slice(-3);
-    const currentMarketPrefix = ('00' + currentMarket?.invoicePrefix).slice(-3);
-    const currentMonthPrefix = ('0' + balanceSheetDate.getMonth() + 1).slice(-2);
-    const currentDayPrefix = ('0' + balanceSheetDate.getDate()).slice(-2);
-    const currentInvoiceId = ('00000' + newInvoiceId).slice(-7);
-    const fullInvoiceId = `${currentCityPrefix}-${currentMarketPrefix}-${balanceSheetDate.getFullYear()}${currentMonthPrefix}${currentDayPrefix}-${currentInvoiceId}`;
-
     invoicesMutation.mutate({
-      id: uuid(),
       clientId: selectedClientId,
       total: total,
       balanceSheetId: sheet.id,
-      paiementType: selectedPaiementMethod as PaiementMethod,
-      invoiceId: fullInvoiceId
+      paiementType: selectedPaiementMethod as PaiementMethod
     });
   };
 
@@ -303,7 +279,6 @@ const BalanceSheetInvoicesModal: React.FC<BalanceSheetInvoicesModalProps> = ({
   onClose,
   balanceSheet,
   onAddDetail,
-  invoiceId,
   currentMarket,
   currentCity
 }) => {
@@ -316,7 +291,6 @@ const BalanceSheetInvoicesModal: React.FC<BalanceSheetInvoicesModalProps> = ({
               onClose={onClose}
               balanceSheet={balanceSheet}
               onAddDetail={onAddDetail}
-              invoiceId={invoiceId}
               currentMarket={currentMarket}
               currentCity={currentCity}
             />

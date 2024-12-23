@@ -272,7 +272,6 @@ export const BalanceSheetModal = ({ open, handleClose, balanceSheet }: BalanceSh
           onClose={() => setOpenModal(false)}
           balanceSheet={balanceSheet}
           onAddDetail={onAddDetail}
-          invoiceId={invoices?.length + 1}
           currentCity={currentCity}
           currentMarket={currentMarket}
         />

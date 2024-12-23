@@ -62,12 +62,11 @@ function CitiesAndMarketsHorizontalPanel(): JSX.Element {
           sx={{
             minWidth: 120
           }}>
-          {cities !== undefined &&
-            cities?.map(city => (
-              <MenuItem key={city.id} value={city.id}>
-                {city.name}
-              </MenuItem>
-            ))}
+          {cities?.map(city => (
+            <MenuItem key={city.id} value={city.id}>
+              {city.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       <Box

@@ -2,7 +2,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { config } from 'config';
 import { formatResponse, formatQueryData } from '../utils';
 
-import { IBalanceSheet, IBalanceSheetInvoices } from 'types/types';
+import { APIIBalanceSheetInvoices, IBalanceSheet, IBalanceSheetInvoices } from 'types/types';
 import { getBalanceSheetInvoicesQuery } from './helpers';
 import Cookies from 'js-cookie';
 
@@ -21,7 +21,7 @@ export const useBalanceSheetInvoicesMutation = ({
   onError
 }: useBalanceSheetInvoicesMutationParams) => {
   return useMutation({
-    mutationFn: (newBalanceSheetDetail: IBalanceSheetInvoices) => {
+    mutationFn: (newBalanceSheetDetail: APIIBalanceSheetInvoices) => {
       const token = Cookies.get('token');
       const requestOptions = {
         method: 'POST',
